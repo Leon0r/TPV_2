@@ -34,6 +34,7 @@ private:
 	InputComponent* inputComp_;
 	InputComponent* inputRotComp_;
 	PhysicsComponent* physicsComp_;
+	PhysicsComponent* physicsTorComp_;
 	RenderComponent* renderComp_;
 };
 

@@ -6,6 +6,7 @@
 #include "FillRectRenderer.h"
 #include "ImageRenderer.h"
 #include "RotationInputComponent.h"
+#include "ToroidalMotionPhysics.h"
 
 ExampleGame::ExampleGame() :
 		SDLGame("Example Game", _WINDOW_WIDTH_, _WINDOW_HEIGHT_) {
@@ -35,13 +36,14 @@ void ExampleGame::initGame() {
 	inputComp_ = new BasicKBCtrlComponent(SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN,
 		SDLK_SPACE);
 	physicsComp_ = new BasicMotionPhysics();
+	physicsTorComp_ = new ToroidalMotionPhysics();
 	renderComp_ = new ImageRenderer(getResources()->getImageTexture(Resources::Airplanes));
 	demoComp_->setWidth(50);
 	demoComp_->setHeight(50);
 	demoComp_->setPosition(Vector2D(100, 100));
-	demoComp_->setVelocity(Vector2D(1, 0));
+	demoComp_->setVelocity(Vector2D(1, 2));
 	demoComp_->addInputComponent(inputComp_);
-	demoComp_->addPhysicsComponent(physicsComp_);
+	demoComp_->addPhysicsComponent(physicsTorComp_);
 	demoComp_->addRenderComponent(renderComp_);
 	actors_.push_back(demoComp_);
 
@@ -61,10 +63,10 @@ void ExampleGame::initGame() {
 	demoComp_->setWidth(50);
 	demoComp_->setHeight(50);
 	demoComp_->setPosition(Vector2D(100, 100));
-	demoComp_->setVelocity(Vector2D(1, 0));
+	demoComp_->setVelocity(Vector2D(1, 2));
 	demoComp_->addInputComponent(inputComp_);
 	demoComp_->addInputComponent(inputRotComp_);
-	demoComp_->addPhysicsComponent(physicsComp_);
+	demoComp_->addPhysicsComponent(physicsTorComp_);
 	demoComp_->addRenderComponent(renderComp_);
 	actors_.push_back(demoComp_);
 }
