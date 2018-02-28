@@ -143,3 +143,19 @@ ProyectosSDL/README.txt
 *.sln
 
 *.props
+
+ProyectosSDL/HolaSDL/fonts/
+
+ProyectosSDL/HolaSDL/images/
+
+ProyectosSDL/HolaSDL/sound/
+
+ProyectosSDL/SDL2-2\.0\.7/
+
+ProyectosSDL/SDL2_net-2\.0\.1/README\.txt
+
+ProyectosSDL/SDL2_net-2\.0\.1/
+
+ProyectosSDL/SDL2_mixer-2\.0\.2/
+
+ProyectosSDL/SDL2_ttf-2\.0\.14/
