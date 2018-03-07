@@ -2,7 +2,8 @@
 
 
 
-AccelerationInputComponent::AccelerationInputComponent(SDL_Keycode speedUp, SDL_Keycode speedDown):speedDown_(speedDown), speedUp_(speedUp)
+AccelerationInputComponent::AccelerationInputComponent(SDL_Keycode speedUp, SDL_Keycode speedDown, double thrust, double maxVelocity ):
+	speedDown_(speedDown), speedUp_(speedUp), thrust_(thrust), maxVelocity_(maxVelocity)
 {
 }
 
@@ -16,6 +17,8 @@ void AccelerationInputComponent::handleInput(GameObject* o, Uint32 time, const S
 
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == speedUp_) {
+			velocity + o->getDirection() * thrust_;
+
 			//velocity = velocity + {1, 1};
 		}
 		else if (event.key.keysym.sym == speedDown_) {

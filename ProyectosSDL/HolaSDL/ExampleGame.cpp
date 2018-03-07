@@ -44,6 +44,7 @@ void ExampleGame::initGame() {
 	demoComp_->setVelocity(Vector2D(1, 2));
 	demoComp_->addInputComponent(inputComp_);
 	demoComp_->addPhysicsComponent(physicsTorComp_);
+	demoComp_->addPhysicsComponent(physicsComp_);
 	demoComp_->addRenderComponent(renderComp_);
 	actors_.push_back(demoComp_);
 
@@ -64,9 +65,10 @@ void ExampleGame::initGame() {
 	demoComp_->setHeight(50);
 	demoComp_->setPosition(Vector2D(100, 100));
 	demoComp_->setVelocity(Vector2D(1, 2));
-	demoComp_->addInputComponent(inputComp_);
+	/*demoComp_->addInputComponent(inputComp_);*/
 	demoComp_->addInputComponent(inputRotComp_);
 	demoComp_->addPhysicsComponent(physicsTorComp_);
+	demoComp_->addPhysicsComponent(physicsComp_);
 	demoComp_->addRenderComponent(renderComp_);
 	actors_.push_back(demoComp_);
 }

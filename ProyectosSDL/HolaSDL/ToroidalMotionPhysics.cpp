@@ -15,7 +15,7 @@ void ToroidalMotionPhysics::update(GameObject* o, Uint32 time)
 {
 	Vector2D position;
 
-	position = o->getPosition() + o->getVelocity();
+	position = o->getPosition();
 
 	if (position.getX() < 0)
 		position.setX(o->getGame()->getWindowWidth());

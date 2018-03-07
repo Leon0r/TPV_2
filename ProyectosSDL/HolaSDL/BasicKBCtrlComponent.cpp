@@ -15,14 +15,18 @@ void BasicKBCtrlComponent::handleInput(GameObject* o, Uint32 time,
 
 	if (event.type == SDL_KEYDOWN) {
 		if (event.key.keysym.sym == left_) {
-			velocity.set(-1,0);
-		} else if (event.key.keysym.sym == right_) {
-			velocity.set(1,0);
-		} else if (event.key.keysym.sym == up_) {
-			velocity.set(0,-1);
-		} else if (event.key.keysym.sym == down_) {
-			velocity.set(0,1);
-		} else if (event.key.keysym.sym == stop_) {
+			velocity.set(1, 0);
+		}
+		else if (event.key.keysym.sym == right_) {
+			velocity.set(1, 0);
+		}
+		else if (event.key.keysym.sym == up_) {
+			velocity.set(0, 1);
+		}
+		else if (event.key.keysym.sym == down_) {
+			velocity.set(0, 1);
+		}
+		else if (event.key.keysym.sym == stop_) {
 			velocity.set(0, 0);
 		}
 	}
