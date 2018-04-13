@@ -24,7 +24,6 @@ private:
 	virtual void deactivateBullets(); // desactiva todas las balas
 	virtual bool isOutOfBounds(Bullet* b);
 	
-	vector<Bullet*> bullets_;
 	FillRectRenderer bulletRenderer_; // renderer de las balas
 	BasicMotionPhysics bulletPhysics_; // movimiento de las balas
 };

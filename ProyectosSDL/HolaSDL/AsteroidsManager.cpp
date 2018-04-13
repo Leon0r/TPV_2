@@ -11,6 +11,8 @@ astroImage_ (ImageRenderer(game->getResources()->getImageTexture(Resources::Astr
 
 AsteroidsManager::~AsteroidsManager()
 {
+	for (Asteroid* a : asteroids_)
+		delete a;
 }
 
 void AsteroidsManager::update(Uint32 time)

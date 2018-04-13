@@ -9,5 +9,8 @@ public:
 	BulletsManager();
 	virtual ~BulletsManager();
 	virtual vector<Bullet*>& getBullets() = 0;
+
+protected:
+	vector<Bullet*> bullets_;
 };
 
