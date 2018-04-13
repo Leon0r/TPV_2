@@ -1,10 +1,10 @@
 #include <math.h>
-#include "ExampleGame.h"
+#include "AsteroidsGame.h"
 
 using namespace std;
 
 int main(int ac, char** av) {
-	ExampleGame g;
+	AsteroidsGame g;
 	g.start();
 	return 0;
 }

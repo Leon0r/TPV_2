@@ -2,8 +2,8 @@
 
 
 
-AccelerationInputComponent::AccelerationInputComponent(SDL_Keycode speedUp, SDL_Keycode speedDown, double thrust, double maxVelocity ):
-	speedDown_(speedDown), speedUp_(speedUp), thrust_(thrust), maxVelocity_(maxVelocity)
+AccelerationInputComponent::AccelerationInputComponent(SDL_Keycode speedUp, SDL_Keycode speedDown, double thrust, double maxVel, double redFactor):
+	speedDown_(speedDown),speedUp_(speedUp), thrust_(thrust), maxVel_(maxVel), reducFactor_(redFactor)
 {
 }
 
@@ -12,19 +12,29 @@ AccelerationInputComponent::~AccelerationInputComponent()
 {
 }
 
-void AccelerationInputComponent::handleInput(GameObject* o, Uint32 time, const SDL_Event& event) {
-	Vector2D velocity = o->getVelocity();
-
+void AccelerationInputComponent::handleInput(GameObject * o, Uint32 time, const SDL_Event & event)
+{
+	// con la W acelera y con la S frena
 	if (event.type == SDL_KEYDOWN) {
-		if (event.key.keysym.sym == speedUp_) {
-			velocity + o->getDirection() * thrust_;
+		Vector2D velAux;
+		velAux = o->getVelocity();
 
-			//velocity = velocity + {1, 1};
+		if (event.key.keysym.sym == speedUp_) {
+			velAux = o->getVelocity() + o->getDirection()*thrust_;
+			if (velAux.magnitude() >= maxVel_) {
+				velAux.normalize();
+				velAux = velAux * maxVel_;
+			}
 		}
 		else if (event.key.keysym.sym == speedDown_) {
-			velocity.set(1, 0);
-		}
-	}
+			if (velAux.magnitude() < limitMagnitude_)
+				velAux = { 0,0 };
 
-	o->setVelocity(velocity);
+			velAux = o->getVelocity();
+			velAux = velAux * reducFactor_;
+		}
+		if (velAux.magnitude() < limitMagnitude_)
+			velAux = { 0,0 };
+		o->setVelocity(velAux);
+	}
 }

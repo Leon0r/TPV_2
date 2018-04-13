@@ -1,25 +1,24 @@
-#include "ToroidalMotionPhysics.h"
+#include "CircularMotionPhysics.h"
 
 
 
-ToroidalMotionPhysics::ToroidalMotionPhysics()
+CircularMotionPhysics::CircularMotionPhysics()
 {
 }
 
 
-ToroidalMotionPhysics::~ToroidalMotionPhysics()
+CircularMotionPhysics::~CircularMotionPhysics()
 {
 }
 
-void ToroidalMotionPhysics::update(GameObject* o, Uint32 time)
+void CircularMotionPhysics::update(GameObject * o, Uint32 time)
 {
 	Vector2D position;
-
-	position = o->getPosition();
+	position=o->getPosition() + o->getVelocity();
 
 	if (position.getX() < 0)
 		position.setX(o->getGame()->getWindowWidth());
-	else if(position.getX() > (o->getGame()->getWindowWidth()))
+	else if (position.getX() > (o->getGame()->getWindowWidth()))
 		position.setX(0);
 
 	if (position.getY() < 0)

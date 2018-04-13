@@ -8,8 +8,7 @@
  */
 class RenderComponent {
 public:
-	RenderComponent(Texture* texture);
-	RenderComponent(){}
+	RenderComponent();
 	virtual ~RenderComponent();
 	virtual void render(GameObject* o, Uint32 time) = 0;
 };

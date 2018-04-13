@@ -1,6 +1,6 @@
 #include "RenderComponent.h"
 
-RenderComponent::RenderComponent(Texture* texture) {
+RenderComponent::RenderComponent() {
 	// TODO Auto-generated constructor stub
 
 }
