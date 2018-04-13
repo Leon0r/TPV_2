@@ -13,6 +13,6 @@ BasicMotionPhysics::~BasicMotionPhysics()
 
 void BasicMotionPhysics::update(GameObject * o, Uint32 time)
 {
-	Vector2D nPos = { o->getPosition().getX() + o->getVelocity().getX(),o->getPosition().getY() - o->getVelocity().getY() };
+	Vector2D nPos = o->getPosition() + o->getVelocity();
 	o->setPosition(nPos);
 }

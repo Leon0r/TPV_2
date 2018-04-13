@@ -20,7 +20,7 @@ void AccelerationInputComponent::handleInput(GameObject * o, Uint32 time, const 
 		velAux = o->getVelocity();
 
 		if (event.key.keysym.sym == speedUp_) {
-			velAux = o->getVelocity() + o->getDirection()*thrust_;
+			velAux = o->getVelocity() + (o->getDirection()*thrust_);
 			if (velAux.magnitude() >= maxVel_) {
 				velAux.normalize();
 				velAux = velAux * maxVel_;

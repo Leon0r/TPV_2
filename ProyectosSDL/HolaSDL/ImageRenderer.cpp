@@ -21,8 +21,8 @@ ImageRenderer::~ImageRenderer() {
 }
 
 void ImageRenderer::render(GameObject* o, Uint32 time) {
-	Vector2D v(0, 1);
-	double a = o->getDirection().angle(v);
+	Vector2D v(0, -1);
+	double a = -o->getDirection().angle(v);
 	image_->render(o->getGame()->getRenderer(), getDestRect(o), a, &rectFrame);
 }
 

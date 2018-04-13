@@ -20,7 +20,7 @@ bool Collisions::collidesWithRotation(GameObject* o1, GameObject* o2) {
 	Vector2D All = Vector2D(-o1->getWidth() / 2, o1->getHeight() / 2);
 	Vector2D Arl = Vector2D(o1->getWidth() / 2, o1->getHeight() / 2);
 
-	double angleA = Vector2D(0, 1).angle(o1->getDirection());
+	double angleA = Vector2D(0, -1).angle(o1->getDirection());
 	Alu.rotate(angleA);
 	Aru.rotate(angleA);
 	All.rotate(angleA);
@@ -39,7 +39,7 @@ bool Collisions::collidesWithRotation(GameObject* o1, GameObject* o2) {
 	Vector2D Bll = Vector2D(-o2->getWidth() / 2, o2->getHeight() / 2);
 	Vector2D Brl = Vector2D(o2->getWidth() / 2, o2->getHeight() / 2);
 
-	double angleB = Vector2D(0, 1).angle(o2->getDirection());
+	double angleB = Vector2D(0, -1).angle(o2->getDirection());
 	Blu.rotate(angleB);
 	Bru.rotate(angleB);
 	Bll.rotate(angleB);

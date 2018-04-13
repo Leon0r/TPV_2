@@ -74,8 +74,8 @@ void AsteroidsManager::initAsteroids()
 		aux = getAsteroidDead(); // busca el primer asteroide desactivado
 		if (aux != nullptr) {
 			aux->setGenerations(rand() % 3 + 1); // generacion entre 2 y 4 incluidos
-			aux->setWidth(aux->getGenerations() * 10);
-			aux->setHeight(aux->getGenerations() * 10);
+			aux->setWidth(12+aux->getGenerations() * 10);
+			aux->setHeight(12+aux->getGenerations() * 10);
 			asteroidToLaterals(aux); // Lo inicializa en uno de los laterales
 		}
 	}
@@ -139,6 +139,8 @@ void AsteroidsManager::asteroidCollision(Asteroid * asteroid)
 			a = getAsteroidDead();
 			a->setActive(true);
 			a->setGenerations(nextGen);
+			a->setWidth(12 + a->getGenerations() * 10);
+			a->setHeight(12 + a->getGenerations() * 10);
 			a->setDirection(vel);
 			a->setVelocity(vel);
 			a->setPosition(pos);

@@ -21,15 +21,11 @@ void GunInputComponent::shoot(GameObject* o)
 	Vector2D pos = o->getPosition();
 	Vector2D a = { o->getWidth() / 2, o->getHeight() / 2 };
 	pos = pos + a;
-	Vector2D b = { o->getDirection().getX()*o->getHeight() / 2, -o->getDirection().getY()*o->getHeight() / 2 };
-	pos = pos + b;
+	pos = pos + (o->getDirection()*o->getHeight() / 2);
 
 	double mgn = max((o->getVelocity().magnitude()*velBullet), 2.0);
 	Vector2D velB = o->getDirection()*mgn;
 
-	Message * msg = new FighterIsShooting(static_cast<Fighter*>(o), pos, velB);
-	send(msg);
-	delete msg;
-	msg = nullptr;
-
+	FighterIsShooting msg(static_cast<Fighter*>(o), pos, velB);
+	send(&msg);
 }
