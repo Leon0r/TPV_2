@@ -33,6 +33,7 @@ void AsteroidsGame::initGame()
 	bulletsManager_.registerObserver(&soundManager_);
 
 	gameManager_.registerObserver(&fightersManager_);
+	gameManager_.registerObserver(&bulletsManager_);
 	gameManager_.registerObserver(&asteroidsManager_);
 	gameManager_.registerObserver(&soundManager_);
 
