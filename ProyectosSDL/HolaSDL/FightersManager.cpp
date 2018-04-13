@@ -5,7 +5,7 @@
 FightersManager::FightersManager(SDLGame* game, Observer* bulletsManager) :GameObject(game),
 renderComp_(ImageRenderer(game->getResources()->getImageTexture(Resources::Airplanes), { 4,3 }, { 3,2 })),
 fighter_(Fighter(game, 0)), accelerationComp_(SDLK_w, SDLK_s, 0.9, 5.0, 0.9), rotationComp_(SDLK_e, SDLK_q),
-gunComp1_(GunInputComponent(SDLK_d,5,300)), gunComp2_(GunInputComponent(SDLK_d, 3000, 1))
+gunComp1_(GunInputComponent(SDLK_SPACE,5,300)), gunComp2_(GunInputComponent(SDLK_SPACE, 3000, 1))
 {
 	gunComp1_.registerObserver(bulletsManager);
 	gunComp2_.registerObserver(bulletsManager);
