@@ -31,10 +31,12 @@ private:
 	// pone todos los asteroides a noActivo 
 	// y crea los asteroides iniciales del juego
 	void initAsteroids();
+	// coloca los asteroides iniciales de principio de ronda en los laterales de la pantalla
 	void asteroidToLaterals(Asteroid* asteroid);
+	// reaccion al chocar un asteroide con una bala
 	void asteroidCollision(Asteroid* asteroid);
 
-	vector<Asteroid*> asteroids_;
+	vector<Asteroid*> asteroids_; //pool de asteroides
 	ImageRenderer astroImage_; // imagen del asteroide
 	CircularMotionPhysics circularPhysics_; // movimiento toroidal
 	RotationPhysics rotationPhysics_; // rotar asteroide todo el rato

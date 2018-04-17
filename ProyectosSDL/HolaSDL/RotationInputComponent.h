@@ -4,6 +4,7 @@
 class RotationInputComponent :
 	public InputComponent
 {
+	// rota el objeto
 public:
 	RotationInputComponent(SDL_Keycode clock, SDL_Keycode counterClock);
 	virtual ~RotationInputComponent();

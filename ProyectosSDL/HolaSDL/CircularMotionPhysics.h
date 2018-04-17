@@ -5,6 +5,7 @@
 class CircularMotionPhysics :
 	public PhysicsComponent
 {
+	// movimiento toroidal
 public:
 	CircularMotionPhysics();
 	virtual ~CircularMotionPhysics();

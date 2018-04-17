@@ -21,17 +21,21 @@ void CollisionManager::update(Uint32 time)
 	Message* msg;
 
 	// fighters with asteroids
-	for (Asteroid* a : asteroids) {
-		if (fighter->isActive() && a->isActive() && Collisions::collidesWithRotation(fighter, a)) {
-			msg = new AstroidFighterCollision(a, fighter);
-			send(msg);
-			delete msg;
-			msg = nullptr;
+	if (fighter->isActive()) {
+		for (Asteroid* a : asteroids) {
+			if (a->isActive() && Collisions::collidesWithRotation(fighter, a)) {
+				msg = new AstroidFighterCollision(a, fighter);
+				send(msg);
+				delete msg;
+				msg = nullptr;
+			}
 		}
 	}
 
 	vector<Asteroid*>::iterator it;
 	// bullets with asteroids
+	// por cada bala mira si ha chocado con los asteroides solo si estan activos ambos
+	// chequea balas sobre asteroides para que no cuente colisiones de balas 2 veces
 	for (Bullet* bull : bullets) {
 		if (bull->isActive()) {
 			it = asteroids.begin();

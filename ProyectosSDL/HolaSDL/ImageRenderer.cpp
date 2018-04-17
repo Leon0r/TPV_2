@@ -20,8 +20,9 @@ ImageRenderer::ImageRenderer(Texture * image, Vector2D numFrames, Vector2D frame
 ImageRenderer::~ImageRenderer() {
 }
 
+// tiene en cuenta la rotacion del objeto
 void ImageRenderer::render(GameObject* o, Uint32 time) {
-	Vector2D v(0, -1);
+	Vector2D v(0, -1); // IMPORTANTE EL EJE VERTICAL ES (0,-1), estan invertidos
 	double a = -o->getDirection().angle(v);
 	image_->render(o->getGame()->getRenderer(), getDestRect(o), a, &rectFrame);
 }

@@ -13,7 +13,7 @@ public:
 
 	virtual ~ImageRenderer();
 	virtual void render(GameObject* o, Uint32 time);
-	SDL_Rect getDestRect(GameObject * o);
+	SDL_Rect getDestRect(GameObject * o); // calcula el Rect de destino
 
 private:
 	Texture* image_;

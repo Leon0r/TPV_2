@@ -1,7 +1,8 @@
 #include "AsteroidsGame.h"
 
 
-
+// llama a las constructoras de los objetos de los managers. 
+// solo es necesario si el obj no tiene constructora predeterminada (sin parametros)
 AsteroidsGame::AsteroidsGame():
 	SDLGame("Asteroids", _WINDOW_WIDTH_, _WINDOW_HEIGHT_),
 	bulletsManager_(StarTreckBulletsManager(this)), fightersManager_(FightersManager(this, &bulletsManager_)),
@@ -22,6 +23,8 @@ void AsteroidsGame::initGame()
 {
 	SDL_ShowCursor(0);
 
+	// añade observers
+	// solo son observers los managers de X
 	collisionManager_.registerObserver(&gameManager_);
 	collisionManager_.registerObserver(&asteroidsManager_);
 	collisionManager_.registerObserver(&bulletsManager_);
@@ -37,6 +40,7 @@ void AsteroidsGame::initGame()
 	gameManager_.registerObserver(&asteroidsManager_);
 	gameManager_.registerObserver(&soundManager_);
 
+	// añade los managers a la lista de actores en el orden en el que hay que actualizarlos
 	actors_.push_back(&bulletsManager_);
 	actors_.push_back(&fightersManager_);
 	actors_.push_back(&asteroidsManager_);
@@ -48,6 +52,7 @@ void AsteroidsGame::closeGame()
 {
 }
 
+// bucle del juego
 void AsteroidsGame::start()
 {
 	exit_ = false;
@@ -77,7 +82,7 @@ void AsteroidsGame::handleInput(Uint32 time)
 		case SDLK_ESCAPE:
 			exit_ = true;
 			break;
-			// Pressing f to toggle fullscreen.
+			// Pressing f to toggle fullscreen. (sigue sin funcionar sin razon aparente)
 		case SDLK_f:
 			int flags = SDL_GetWindowFlags(window_);
 			if (flags & SDL_WINDOW_FULLSCREEN) {
@@ -103,7 +108,7 @@ void AsteroidsGame::update(Uint32 time)
 
 void AsteroidsGame::render(Uint32 time)
 {
-	SDL_SetRenderDrawColor(getRenderer(), COLOR(0x00000000));
+	SDL_SetRenderDrawColor(getRenderer(), COLOR(0x00000000)); // el fondo se pinta negro
 	SDL_RenderClear(getRenderer());
 
 	for (GameObject* o : actors_) {

@@ -68,7 +68,7 @@ void GameManager::bulletAsteroidCollision()
 		if (asteroidsInRound >= 10) {
 			badge_ = true;
 			send(&Message(BADGE_ON));
-			badgeTimer.start(TIME_BADGE);
+			badgeTimer.start(TIME_BADGE); // activa el timer
 		}
 	}
 }

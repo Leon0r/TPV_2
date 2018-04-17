@@ -12,7 +12,7 @@ BadgeTimer::~BadgeTimer()
 
 void BadgeTimer::update(GameObject* o, Uint32 time)
 {
-	if (on_ && (timeOn_ + timeInterval_) > time) {
+	if (on_ && (timeOn_ + timeInterval_) < time) {
 		static_cast<GameManager*>(o)->setBadge(false);
 		on_ = false;
 	}

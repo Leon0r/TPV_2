@@ -87,7 +87,7 @@ void StarTreckBulletsManager::shoot(Fighter * owner, Vector2D pos, Vector2D vel)
 	aux->setVelocity(vel);
 
 	aux->setWidth(4);
-	aux->setHeight(5);
+	aux->setHeight(4);
 	aux->setActive(true);
 	send(&Message(BULLET_CREATED));
 }

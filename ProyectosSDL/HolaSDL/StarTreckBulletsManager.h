@@ -22,7 +22,7 @@ private:
 	virtual void receive(Message* msg);
 	virtual void shoot(Fighter* owner, Vector2D pos, Vector2D vel);
 	virtual void deactivateBullets(); // desactiva todas las balas
-	virtual bool isOutOfBounds(Bullet* b);
+	virtual bool isOutOfBounds(Bullet* b); // desactiva balas fuera de pantalla
 	
 	FillRectRenderer bulletRenderer_; // renderer de las balas
 	BasicMotionPhysics bulletPhysics_; // movimiento de las balas

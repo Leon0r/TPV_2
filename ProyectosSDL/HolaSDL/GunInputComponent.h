@@ -2,7 +2,7 @@
 #include"BaseGunInputComponent.h"
 
 class GunInputComponent :
-	public BaseGunInputComponent
+	public BaseGunInputComponent // base de gunInput para que sea extensible a otros tipos de armas
 {
 public:
 	GunInputComponent(SDL_Keycode trigger, int bullets, Uint32 timeWaiting);

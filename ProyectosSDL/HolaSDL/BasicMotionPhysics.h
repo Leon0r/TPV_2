@@ -3,6 +3,7 @@
 class BasicMotionPhysics :
 	public PhysicsComponent
 {
+	// movimiento basico hacia delante
 public:
 	BasicMotionPhysics();
 	virtual ~BasicMotionPhysics();

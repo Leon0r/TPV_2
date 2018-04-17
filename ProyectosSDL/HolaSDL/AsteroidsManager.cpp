@@ -29,11 +29,12 @@ void AsteroidsManager::render(Uint32 time)
 			a->render(time);
 }
 
+// manejo de mensajes
 void AsteroidsManager::receive(Message * msg)
 {
 	switch (msg->id_) {
 	case BULLET_ASTROID_COLLISION: {
-		BulletAstroidCollision * a = static_cast<BulletAstroidCollision*>(msg);
+		BulletAstroidCollision * a = static_cast<BulletAstroidCollision*>(msg); // se puede hacer static porque solo ese tipo pasa ese mensaje concreto
 		asteroidCollision(a->astroid_);
 		break; 
 	}
@@ -46,6 +47,9 @@ void AsteroidsManager::receive(Message * msg)
 // Busca el primer asteroide inactivo o crea uno nuevo al final
 Asteroid * AsteroidsManager::getAsteroidDead()
 {
+	// recorre la lista de asteroides buscando uno inactivo
+	// si lo encuentra, lo devuelve para reutilizarlo
+	// si no, crea uno con los componentes del asteroids
 	vector<Asteroid*>::iterator it;
 	it = asteroids_.begin();
 	while (it != asteroids_.end() && (*it)->isActive()) it++;
@@ -86,6 +90,9 @@ void AsteroidsManager::initAsteroids()
 // Inicializa el asteroide en uno de los laterales con vel aleatoria 
 void AsteroidsManager::asteroidToLaterals(Asteroid * asteroid)
 {
+	// primero mira en que lado de la pantalla lo pone
+	// y luego la posicion exacta
+
 	// 0 arriba, 1 abajo, 2 izqu, 3 dcha
 	int lateral = rand() % 4;
 	double auxX, auxY;
@@ -95,15 +102,16 @@ void AsteroidsManager::asteroidToLaterals(Asteroid * asteroid)
 		asteroid->toggleActive(); // lo activa
 		// laterales superior e inferior (0,1)
 		if (lateral <= 1) {
-			auxX = rand() % game_->getWindowWidth();
+			auxX = rand() % game_->getWindowWidth(); // abajo
 			auxY = rand() % MARGEN;
-			if (lateral == 0)
+			if (lateral == 0) // arriba
 				auxY = game_->getWindowHeight() - auxY;
 		}
+		// laterales izq y dcha (2,3)
 		else {
-			auxY = rand() % game_->getWindowHeight();
+			auxY = rand() % game_->getWindowHeight(); // izq
 			auxX = rand() % MARGEN;
-			if (lateral == 3)
+			if (lateral == 3) //dcha
 				auxX = game_->getWindowWidth() - auxX;
 		}
 
@@ -125,7 +133,8 @@ void AsteroidsManager::asteroidCollision(Asteroid * asteroid)
 {
 	asteroid->toggleActive(); // lo pone a inactivo
 	numOfAsteroids_--;
-
+	 
+	// si es de gen > 1, crea asteroides de generacion inferior rotados 30º
 	if (asteroid->getGenerations() > 1) {
 		Vector2D vel, pos;
 		int nextGen = asteroid->getGenerations() - 1;

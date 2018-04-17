@@ -9,11 +9,11 @@ public:
 	virtual ~AccelerationInputComponent();
 	virtual void handleInput(GameObject* o, Uint32 time, const SDL_Event& event);
 private:
-	double thrust_;
-	double maxVel_;
-	double reducFactor_;
-	const double limitMagnitude_ = 0.1;
-	SDL_Keycode speedUp_; 
+	double thrust_; // impulso de aceleracion
+	double maxVel_; // velocidad maxima
+	double reducFactor_; // factor de desaceleracion
+	const double limitMagnitude_ = 0.1; // para que cuando vel.magnitude sea menor que este, se ponga a 0 y no se mueva pixel a pixel
+	SDL_Keycode speedUp_; // teclas de acelerar/desacelerar
 	SDL_Keycode speedDown_;
 };
 

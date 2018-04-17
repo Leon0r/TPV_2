@@ -13,9 +13,12 @@ const int TIME_BADGE = 300;
 class GameManager :
 	public Container, public Observer, public Observable
 {
+	// maneja HUD (puntos, vidas...)
 public:
 	GameManager(SDLGame* game);
 	virtual ~GameManager();
+
+	virtual void update(Uint32 time) { badgeTimer.update(this, time); }
 
 	bool isGameOver() const { return gameOver_; }
 	int getLives()const { return lives_; }
@@ -25,6 +28,7 @@ public:
 	void setScore(int score) { score_ = score; }
 	void setBadge(bool b) { badge_ = b; };
 	void receive(Message* msg);
+
 
 private:
 	void asteroidFighterCollision();

@@ -10,6 +10,7 @@
 class AsteroidsGame :
 	public SDLGame
 {
+	// juego general
 public:
 	AsteroidsGame();
 	virtual ~AsteroidsGame();
