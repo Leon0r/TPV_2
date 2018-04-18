@@ -6,8 +6,8 @@
 AsteroidsGame::AsteroidsGame():
 	SDLGame("Asteroids", _WINDOW_WIDTH_, _WINDOW_HEIGHT_),
 	bulletsManager_(StarTreckBulletsManager(this)), fightersManager_(FightersManager(this, &bulletsManager_)),
-	asteroidsManager_ (AsteroidsManager(this)), collisionManager_ (CollisionManager(this, &asteroidsManager_, &bulletsManager_, &fightersManager_)),
-	gameManager_(GameManager(this)),soundManager_(SoundManager(this))
+	asteroidsManager_ (AsteroidsManager(this)), collisionManager_ (CollisionManager(this, &asteroidsManager_, &bulletsManager_, &fightersManager_,&bonus_)),
+	gameManager_(GameManager(this)),soundManager_(SoundManager(this)), bonus_(Bonus(this))
 {
 	initGame();
 	exit_ = false;
@@ -24,11 +24,12 @@ void AsteroidsGame::initGame()
 	SDL_ShowCursor(0);
 
 	// añade observers
-	// solo son observers los managers de X
+
 	collisionManager_.registerObserver(&gameManager_);
 	collisionManager_.registerObserver(&asteroidsManager_);
 	collisionManager_.registerObserver(&bulletsManager_);
 	collisionManager_.registerObserver(&soundManager_);
+	collisionManager_.registerObserver(&bonus_);
 
 	asteroidsManager_.registerObserver(&gameManager_);
 
@@ -39,11 +40,13 @@ void AsteroidsGame::initGame()
 	gameManager_.registerObserver(&bulletsManager_);
 	gameManager_.registerObserver(&asteroidsManager_);
 	gameManager_.registerObserver(&soundManager_);
+	gameManager_.registerObserver(&bonus_);
 
 	// añade los managers a la lista de actores en el orden en el que hay que actualizarlos
+	actors_.push_back(&bonus_);
 	actors_.push_back(&bulletsManager_);
 	actors_.push_back(&fightersManager_);
-	actors_.push_back(&asteroidsManager_);
+	//actors_.push_back(&asteroidsManager_);
 	actors_.push_back(&collisionManager_);
 	actors_.push_back(&gameManager_);
 }

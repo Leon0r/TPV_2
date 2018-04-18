@@ -6,6 +6,7 @@
 #include "AsteroidsManager.h"
 #include "GameManager.h"
 #include "SoundManager.h"
+#include "Bonus.h"
 
 class AsteroidsGame :
 	public SDLGame
@@ -36,5 +37,6 @@ private:
 	CollisionManager collisionManager_;
 	GameManager gameManager_;
 	SoundManager soundManager_;
+	Bonus bonus_;
 };
 

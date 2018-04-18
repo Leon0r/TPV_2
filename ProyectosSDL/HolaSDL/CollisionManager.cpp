@@ -2,8 +2,8 @@
 
 
 
-CollisionManager::CollisionManager(SDLGame* game, AsteroidsManager* asteroidMngr, BulletsManager* bulletMngr, FightersManager* figterMngr) :
-	GameObject(game), bulletsManager_(bulletMngr), asteroidsManager_(asteroidMngr), fightersManager_(figterMngr)
+CollisionManager::CollisionManager(SDLGame* game, AsteroidsManager* asteroidMngr, BulletsManager* bulletMngr, FightersManager* figterMngr, Bonus* bonus) :
+	GameObject(game), bulletsManager_(bulletMngr), asteroidsManager_(asteroidMngr), fightersManager_(figterMngr), bonus_(bonus)
 {
 }
 
@@ -49,4 +49,15 @@ void CollisionManager::update(Uint32 time)
 			}
 		}
 	}
+
+	// Bullet with bonus
+	if (bonus_->isActive())
+		for (Bullet* bull : bullets) {
+			if (bull->isActive() && Collisions::collidesWithRotation(bull, bonus_)) {
+				msg = new BulletBonusCollision(bull);
+				send(msg);
+				delete msg;
+				msg = nullptr;
+			}
+		}
 }

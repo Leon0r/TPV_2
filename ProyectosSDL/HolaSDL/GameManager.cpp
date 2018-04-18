@@ -37,6 +37,9 @@ void GameManager::receive(Message * msg)
 	case BULLET_ASTROID_COLLISION:
 		bulletAsteroidCollision();
 		break;
+	case BULLET_BONUS_COLLISION:
+		bulletBonusCollision(msg);
+		break;
 	case NO_MORE_ATROIDS:
 		noAsteroids();
 		break;
@@ -71,6 +74,16 @@ void GameManager::bulletAsteroidCollision()
 			badgeTimer.start(TIME_BADGE); // activa el timer
 		}
 	}
+}
+
+void GameManager::bulletBonusCollision(Message * msg)
+{
+	if (lives_ > 0) {
+		BulletBonusCollision * a = static_cast<BulletBonusCollision*>(msg);
+		a->bullet_->setActive(false);
+		lives_++;
+	}
+
 }
 
 void GameManager::noAsteroids()

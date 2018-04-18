@@ -2,7 +2,7 @@
 
 
 
-RotationPhysics::RotationPhysics()
+RotationPhysics::RotationPhysics(int velRot):velRot_(velRot)
 {
 }
 
@@ -13,7 +13,7 @@ RotationPhysics::~RotationPhysics()
 
 void RotationPhysics::update(GameObject * o, Uint32 time)
 {
-	if (t + VEL_ROT < time) {
+	if (t + velRot_ < time) {
 		t = SDL_GetTicks();
 		angle++;
 

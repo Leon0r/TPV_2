@@ -79,7 +79,7 @@ void AsteroidsManager::initAsteroids()
 	for (int i = 0; i < numAst; i++) {
 		aux = getAsteroidDead(); // busca el primer asteroide desactivado
 		if (aux != nullptr) {
-			aux->setGenerations(rand() % 3 + 1); // generacion entre 2 y 4 incluidos
+			aux->setGenerations(rand() % 3 + 2); // generacion entre 2 y 4 incluidos
 			aux->setWidth(12+aux->getGenerations() * 10);
 			aux->setHeight(12+aux->getGenerations() * 10);
 			asteroidToLaterals(aux); // Lo inicializa en uno de los laterales

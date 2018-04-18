@@ -8,6 +8,7 @@
 enum MessageId {
 	BULLET_ASTROID_COLLISION,
 	BULLET_FIGHTER_COLLISION,
+	BULLET_BONUS_COLLISION,
 	ASTROID_FIGHTER_COLLISION,
 	FIGHTER_SHOOT,
 	GAME_OVER,
@@ -42,6 +43,13 @@ struct BulletFighterCollision: Message {
 	}
 	Bullet* bullet_;
 	Fighter* fighter_;
+};
+
+struct BulletBonusCollision : Message {
+	BulletBonusCollision(Bullet* bullet) :
+		Message(BULLET_BONUS_COLLISION), bullet_(bullet) {
+	}
+	Bullet* bullet_;
 };
 
 struct AstroidFighterCollision: Message {

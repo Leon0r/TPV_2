@@ -33,6 +33,7 @@ public:
 private:
 	void asteroidFighterCollision();
 	void bulletAsteroidCollision();
+	void bulletBonusCollision(Message * msg);
 	void noAsteroids();
 
 
