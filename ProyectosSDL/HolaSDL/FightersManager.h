@@ -6,6 +6,7 @@
 #include "AccelerationInputComponent.h"
 #include "RotationInputComponent.h"
 #include "GunInputComponent.h"
+#include "MultibulletGunInputComponent.h"
 #include "BadgeRenderer.h"
 
 class FightersManager :
@@ -31,8 +32,9 @@ private:
 	AccelerationInputComponent accelerationComp_; // para acelerar
 	ImageRenderer renderComp_; // imagen, sprite de a nave
 	RotationInputComponent rotationComp_; // para girar la nave con las teclas
-	GunInputComponent gunComp1_; // 5 balas cada 3 segundos
-	GunInputComponent gunComp2_; // 10 segs de balas ilimitadas
+	BaseGunInputComponent* gunComp1_; // 5 balas cada 3 segundos
+	BaseGunInputComponent* gunComp2_; // 10 segs de balas ilimitadas
+	BaseGunInputComponent* gunComp3_; // multibullets
 	BadgeRenderer badgeRender_; // renderer de la insignia del super arma
 };
 

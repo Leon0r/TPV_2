@@ -56,23 +56,25 @@ void StarTreckBulletsManager::receive(Message * msg)
 		break;
 	case BULLET_ASTROID_COLLISION: {
 		BulletAstroidCollision * a = static_cast<BulletAstroidCollision*>(msg);
-		a->bullet_->setActive(false);
+		if(!a->bullet_->isIndestructible())
+			a->bullet_->setActive(false);
 		break;
 	}
 	case BULLET_FIGHTER_COLLISION:{
 		BulletFighterCollision * a = static_cast<BulletFighterCollision*>(msg);
-		a->bullet_->setActive(false);
+		if(!a->bullet_->isIndestructible())
+			a->bullet_->setActive(false);
 		break;
 	}
 	case FIGHTER_SHOOT: {
 		FighterIsShooting* a = static_cast<FighterIsShooting*>(msg);
-		shoot(a->fighter_, a->bulletPosition_, a->bulletVelocity_);
+		shoot(a->fighter_, a->bulletPosition_, a->bulletVelocity_, a->bulletIndestructible_);
 		break;
 	}
 	}
 }
 
-void StarTreckBulletsManager::shoot(Fighter * owner, Vector2D pos, Vector2D vel)
+void StarTreckBulletsManager::shoot(Fighter * owner, Vector2D pos, Vector2D vel, bool bulletIndestructible)
 {
 	Bullet* aux = getBulletDead();
 	aux->addRenderComponent(&bulletRenderer_);
@@ -85,6 +87,8 @@ void StarTreckBulletsManager::shoot(Fighter * owner, Vector2D pos, Vector2D vel)
 	aux->setFighterID(owner->getID());
 	aux->setPosition(pos);
 	aux->setVelocity(vel);
+
+	aux->setIndestructible(bulletIndestructible);
 
 	aux->setWidth(4);
 	aux->setHeight(4);

@@ -2,8 +2,8 @@
 
 
 
-BaseGunInputComponent::BaseGunInputComponent(SDL_Keycode trigger, int bullets, Uint32 timeInterval):
-	bullets_(bullets), timeInterval_(timeInterval), trigger_(trigger), bulletsShoot(0), timeTriggered_(0)
+BaseGunInputComponent::BaseGunInputComponent(SDL_Keycode trigger, int bullets, Uint32 timeInterval, bool superBullet):
+	bullets_(bullets), timeInterval_(timeInterval), trigger_(trigger), bulletsShoot(0), timeTriggered_(0), superBullet_(superBullet)
 {
 }
 

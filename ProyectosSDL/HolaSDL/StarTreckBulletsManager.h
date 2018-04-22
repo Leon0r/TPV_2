@@ -20,7 +20,7 @@ public:
 private:
 	Bullet * getBulletDead();
 	virtual void receive(Message* msg);
-	virtual void shoot(Fighter* owner, Vector2D pos, Vector2D vel);
+	virtual void shoot(Fighter* owner, Vector2D pos, Vector2D vel, bool bulletIndestructible);
 	virtual void deactivateBullets(); // desactiva todas las balas
 	virtual bool isOutOfBounds(Bullet* b); // desactiva balas fuera de pantalla
 	

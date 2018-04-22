@@ -23,6 +23,6 @@ void GunInputComponent::shoot(GameObject* o)
 	double mgn = max((o->getVelocity().magnitude()*velBullet), 2.0); // velocidad calculada a partir de la vel del fighter para que no se choque con su propia bala
 	Vector2D velB = o->getDirection()*mgn;
 
-	FighterIsShooting msg(static_cast<Fighter*>(o), pos, velB);
+	FighterIsShooting msg(static_cast<Fighter*>(o), pos, velB, superBullet_);
 	send(&msg);
 }
