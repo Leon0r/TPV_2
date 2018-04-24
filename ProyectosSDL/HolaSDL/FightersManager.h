@@ -32,9 +32,12 @@ private:
 	AccelerationInputComponent accelerationComp_; // para acelerar
 	ImageRenderer renderComp_; // imagen, sprite de a nave
 	RotationInputComponent rotationComp_; // para girar la nave con las teclas
-	BaseGunInputComponent* gunComp1_; // 5 balas cada 3 segundos
-	BaseGunInputComponent* gunComp2_; // 10 segs de balas ilimitadas
-	BaseGunInputComponent* gunComp3_; // multibullets
+	vector<BaseGunInputComponent*> guns_; // armas del fighter
+
+	//BaseGunInputComponent* gunComp1_; // 5 balas cada 3 segundos
+	//BaseGunInputComponent* gunComp2_; // 10 segs de balas ilimitadas
+	//BaseGunInputComponent* gunComp3_; // multibullets
+
 	BadgeRenderer badgeRender_; // renderer de la insignia del super arma
 };
 

@@ -2,8 +2,8 @@
 #include <algorithm>  
 
 
-GunInputComponent::GunInputComponent(SDL_Keycode trigger, int bullets, Uint32 timeWaiting):
-BaseGunInputComponent(trigger, bullets, timeWaiting)
+GunInputComponent::GunInputComponent(SDL_Keycode trigger, int bullets, Uint32 timeWaiting, bool superBullet):
+BaseGunInputComponent(trigger, bullets, timeWaiting, superBullet)
 {
 }
 

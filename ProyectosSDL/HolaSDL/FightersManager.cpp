@@ -4,13 +4,17 @@
 
 FightersManager::FightersManager(SDLGame* game, Observer* bulletsManager) :GameObject(game),
 renderComp_(ImageRenderer(game->getResources()->getImageTexture(Resources::Airplanes), { 4,3 }, { 3,2 })),
-fighter_(Fighter(game, 0)), accelerationComp_(SDLK_UP, SDLK_DOWN, 0.2, 5, 0.9), rotationComp_(SDLK_LEFT, SDLK_RIGHT),
-gunComp1_(new GunInputComponent(SDLK_SPACE,5,3000)), gunComp2_(new GunInputComponent(SDLK_SPACE, 3000, 1)),
-gunComp3_(new MultibulletGunInputComponent(SDLK_SPACE, 5, 3000))
+fighter_(Fighter(game, 0)), accelerationComp_(SDLK_UP, SDLK_DOWN, 0.2, 5, 0.9), rotationComp_(SDLK_LEFT, SDLK_RIGHT)
 {
-	gunComp1_->registerObserver(bulletsManager);
-	gunComp2_->registerObserver(bulletsManager);
-	gunComp3_->registerObserver(bulletsManager);
+	guns_.push_back(new GunInputComponent(SDLK_SPACE, 5, 3000)); // gun basica (5 balas cada 3 segs)
+	guns_.push_back(new GunInputComponent(SDLK_SPACE, 5, 3000, true)); // igual que el anterior pero las balas no se destruyen al chocar con asteroides
+	guns_.push_back(new GunInputComponent(SDLK_SPACE, 3000, 1)); // gun badge (balas infinitas durante 10 segs)
+	guns_.push_back(new MultibulletGunInputComponent(SDLK_SPACE, 5, 3000)); // Dispara en estrella
+
+
+	for (BaseGunInputComponent* gun : guns_)
+		gun->registerObserver(bulletsManager);
+
 
 	fighter_.setPosition({ (double)(game_->getWindowWidth() / 2), (double)(game_->getWindowHeight() / 2) });
 	fighter_.setHeight(50.0);
@@ -18,7 +22,7 @@ gunComp3_(new MultibulletGunInputComponent(SDLK_SPACE, 5, 3000))
 	fighter_.addPhysicsComponent(&circularPhysics_);
 	fighter_.addInputComponent(&accelerationComp_);
 	fighter_.addInputComponent(&rotationComp_);
-	fighter_.addInputComponent(gunComp3_);
+	fighter_.addInputComponent(guns_.front());
 
 	fighter_.setActive(false);
 
@@ -28,9 +32,8 @@ gunComp3_(new MultibulletGunInputComponent(SDLK_SPACE, 5, 3000))
 
 FightersManager::~FightersManager()
 {
-	delete gunComp1_;
-	delete gunComp2_;
-	delete gunComp3_;
+	for (BaseGunInputComponent* gun : guns_)
+		delete gun;
 }
 
 void FightersManager::receive(Message * msg)
@@ -60,15 +63,15 @@ void FightersManager::receive(Message * msg)
 void FightersManager::badgeOn()
 {
 	//// quitar arma 1 y poner la 2
-	fighter_.delInputComponent(gunComp1_);
+	/*fighter_.delInputComponent(gunComp1_);
 	fighter_.addInputComponent(gunComp2_);
-	fighter_.addRenderComponent(&badgeRender_);
+	fighter_.addRenderComponent(&badgeRender_);*/
 }
 
 void FightersManager::badgeOff()
 {
 	// quitar arma 1 y poner la 2
-	fighter_.delInputComponent(gunComp2_);
+	/*fighter_.delInputComponent(gunComp2_);
 	fighter_.addInputComponent(gunComp1_);
-	fighter_.delRenderComponent(&badgeRender_);
+	fighter_.delRenderComponent(&badgeRender_);*/
 }
