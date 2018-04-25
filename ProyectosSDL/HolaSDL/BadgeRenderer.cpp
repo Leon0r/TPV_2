@@ -18,8 +18,8 @@ void BadgeRenderer::render(GameObject * o, Uint32 time)
 
 	// draw lifes
 	Texture* badge = game->getResources()->getImageTexture(Resources::Badges);
-	int x = (badge->getWidth() / 3);
-	int y = (badge->getHeight() / 3) * 2;
+	int x = (badge->getWidth() / 3)*(badge_%3);
+	int y = (badge->getHeight() / 3)*(badge_ / 3);
 	int w = badge->getWidth() / 3;
 	int h = badge->getHeight() / 3;
 

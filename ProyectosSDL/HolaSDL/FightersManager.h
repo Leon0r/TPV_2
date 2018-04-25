@@ -25,7 +25,7 @@ public:
 	virtual void receive(Message* msg);
 
 private:
-	virtual void badgeOn();
+	virtual void badgeOn(int GunType);
 	virtual void badgeOff();
 	Fighter fighter_;
 	CircularMotionPhysics circularPhysics_; // movimiento toroidal
@@ -37,7 +37,7 @@ private:
 	//BaseGunInputComponent* gunComp1_; // 5 balas cada 3 segundos
 	//BaseGunInputComponent* gunComp2_; // 10 segs de balas ilimitadas
 	//BaseGunInputComponent* gunComp3_; // multibullets
-
+	int badgeAct = 0;
 	BadgeRenderer badgeRender_; // renderer de la insignia del super arma
 };
 

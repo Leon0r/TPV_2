@@ -45,33 +45,41 @@ void FightersManager::receive(Message * msg)
 		fighter_.setVelocity({ 0.1,0.1 });
 		break;
 	}
-	case ROUND_OVER:
+	case ROUND_OVER: 
 		fighter_.setActive(false);
-		break;
+		break; 
 	case GAME_OVER:
 		fighter_.setActive(false);
 		break;
-	case BADGE_ON:
-		badgeOn();
-		break;
+	case BADGE_ON: {
+		BadgeIsOn* b = static_cast<BadgeIsOn*>(msg);
+		badgeOn(b->badgeID_);
+		break; }
 	case BADGE_OFF:
 		badgeOff();
 		break;
 	}
 }
 
-void FightersManager::badgeOn()
+void FightersManager::badgeOn(int GunType)
 {
-	//// quitar arma 1 y poner la 2
-	/*fighter_.delInputComponent(gunComp1_);
-	fighter_.addInputComponent(gunComp2_);
-	fighter_.addRenderComponent(&badgeRender_);*/
+	//// quitar todas las armas y poner la de tipo GunType
+	if (GunType < guns_.size()) {
+		for (BaseGunInputComponent* gun : guns_)
+			fighter_.delInputComponent(gun);
+
+		fighter_.addInputComponent(guns_[GunType]);
+		badgeRender_.setBadge(GunType);
+		fighter_.addRenderComponent(&badgeRender_);
+	}
 }
 
 void FightersManager::badgeOff()
 {
-	// quitar arma 1 y poner la 2
-	/*fighter_.delInputComponent(gunComp2_);
-	fighter_.addInputComponent(gunComp1_);
-	fighter_.delRenderComponent(&badgeRender_);*/
+	// quita todas las armas y pone la basica ([0])
+	for (BaseGunInputComponent* gun : guns_)
+		fighter_.delInputComponent(gun);
+
+	fighter_.addInputComponent(guns_[0]);
+	fighter_.delRenderComponent(&badgeRender_);
 }

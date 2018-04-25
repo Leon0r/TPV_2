@@ -18,16 +18,14 @@ void CollisionManager::update(Uint32 time)
 	vector<Asteroid*> asteroids = asteroidsManager_->getAsteroids();
 	Fighter* fighter = fightersManager_->getFighter();
 
-	Message* msg;
+	
 
 	// fighters with asteroids
 	if (fighter->isActive()) {
 		for (Asteroid* a : asteroids) {
 			if (a->isActive() && Collisions::collidesWithRotation(fighter, a)) {
-				msg = new AstroidFighterCollision(a, fighter);
-				send(msg);
-				delete msg;
-				msg = nullptr;
+				Message msg (AstroidFighterCollision(a, fighter));
+				send(&msg);
 			}
 		}
 	}
@@ -42,22 +40,19 @@ void CollisionManager::update(Uint32 time)
 			while (it != asteroids.end() && !Collisions::collidesWithRotation(bull, (*it)))
 				it++;
 			if (it != asteroids.end() && (*it)->isActive()) {
-				msg = new BulletAstroidCollision(bull, (*it));
-				send(msg);
-				delete msg;
-				msg = nullptr;
+				Message msg (BulletAstroidCollision(bull, (*it)));
+				send(&msg);
 			}
 		}
 	}
 
 	// Bullet with bonus
-	if (bonus_->isActive())
+	if (bonus_->isActive()) {
 		for (Bullet* bull : bullets) {
 			if (bull->isActive() && Collisions::collidesWithRotation(bull, bonus_)) {
-				msg = new BulletBonusCollision(bull);
-				send(msg);
-				delete msg;
-				msg = nullptr;
+				Message msg(BulletBonusCollision(bull));
+				//send(&msg);
 			}
 		}
+	}
 }
