@@ -23,6 +23,7 @@ fighter_(Fighter(game, 0)), accelerationComp_(SDLK_UP, SDLK_DOWN, 0.2, 5, 0.9), 
 	fighter_.addInputComponent(&accelerationComp_);
 	fighter_.addInputComponent(&rotationComp_);
 	fighter_.addInputComponent(guns_.front());
+	fighter_.setWeapon(0);
 
 	fighter_.setActive(false);
 
@@ -64,12 +65,13 @@ void FightersManager::receive(Message * msg)
 void FightersManager::badgeOn(int GunType)
 {
 	//// quitar todas las armas y poner la de tipo GunType
-	if (GunType < guns_.size()) {
+	if (GunType > 0 && GunType < guns_.size()) {
 		for (BaseGunInputComponent* gun : guns_)
 			fighter_.delInputComponent(gun);
 
 		fighter_.addInputComponent(guns_[GunType]);
 		badgeRender_.setBadge(GunType);
+		fighter_.setWeapon(GunType);
 		fighter_.addRenderComponent(&badgeRender_);
 	}
 }
@@ -82,4 +84,5 @@ void FightersManager::badgeOff()
 
 	fighter_.addInputComponent(guns_[0]);
 	fighter_.delRenderComponent(&badgeRender_);
+	fighter_.setWeapon(0);
 }

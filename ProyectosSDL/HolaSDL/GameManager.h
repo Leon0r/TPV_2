@@ -40,7 +40,7 @@ private:
 	int score_ = 0;
 	int asteroidsInRound = 0;
 	int lives_ = LIVES;
-	Fighter* figter_;
+	Fighter* fighter_;
 	BadgeTimer badgeTimer;
 	bool running_, gameOver_, badge_;
 	ScoreRenderer scoreRender_;

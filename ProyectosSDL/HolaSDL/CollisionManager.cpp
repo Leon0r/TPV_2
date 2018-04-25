@@ -40,8 +40,10 @@ void CollisionManager::update(Uint32 time)
 			while (it != asteroids.end() && !Collisions::collidesWithRotation(bull, (*it)))
 				it++;
 			if (it != asteroids.end() && (*it)->isActive()) {
-				Message msg (BulletAstroidCollision(bull, (*it)));
-				send(&msg);
+ 				Message* msg  = new BulletAstroidCollision(bull, (*it));
+  				send(msg);
+				delete msg;
+				msg = nullptr;
 			}
 		}
 	}
@@ -50,8 +52,10 @@ void CollisionManager::update(Uint32 time)
 	if (bonus_->isActive()) {
 		for (Bullet* bull : bullets) {
 			if (bull->isActive() && Collisions::collidesWithRotation(bull, bonus_)) {
-				Message msg(BulletBonusCollision(bull));
-				//send(&msg);
+				Message* msg = new BulletBonusCollision(bull);
+				send(msg);
+				delete msg;
+				msg = nullptr;
 			}
 		}
 	}

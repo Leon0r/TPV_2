@@ -46,7 +46,7 @@ void AsteroidsGame::initGame()
 	actors_.push_back(&bonus_);
 	actors_.push_back(&bulletsManager_);
 	actors_.push_back(&fightersManager_);
-	//actors_.push_back(&asteroidsManager_);
+	actors_.push_back(&asteroidsManager_);
 	actors_.push_back(&collisionManager_);
 	actors_.push_back(&gameManager_);
 }
