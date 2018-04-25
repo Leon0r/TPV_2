@@ -68,10 +68,27 @@ void GameManager::bulletAsteroidCollision()
 	if (!gameOver_) {
 		score_++;
 		asteroidsInRound++;
-		if (asteroidsInRound >= 10) {
+		
+		switch (asteroidsInRound) {
+		case 5:
+			gunType = 1; // 10 segs balas infinitas
+			changedGun = true;
+			break;
+		case 10:
+			gunType = 2; // balas que no se destruyen a primer toque
+			changedGun = true;
+			break;
+		case 20:
+			gunType = 3; // 6 balas en estrella
+			changedGun = true;
+			break;
+		}
+
+		if (changedGun) {
+			changedGun = false;
 			badge_ = true;
-			Message msg(BadgeIsOn(fighter_->getWeapon()));
-			send(&msg);
+			Message* msg = new BadgeIsOn(gunType);
+			send(msg);
 			badgeTimer.start(TIME_BADGE); // activa el timer
 		}
 	}

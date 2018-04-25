@@ -39,6 +39,8 @@ private:
 
 	int score_ = 0;
 	int asteroidsInRound = 0;
+	int gunType = 0;
+	bool changedGun = false; // Para que solo cambie el arma si acaba de cambiar
 	int lives_ = LIVES;
 	Fighter* fighter_;
 	BadgeTimer badgeTimer;
