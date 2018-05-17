@@ -1,50 +1,49 @@
 #include "AsteroidsManager.h"
 
+#include "Collisions.h"
 
-
-AsteroidsManager::AsteroidsManager(SDLGame* game):GameObject(game),
-astroImage_ (ImageRenderer(game->getResources()->getImageTexture(Resources::Astroid)))
-{
-	numOfAsteroids_ = 0;
+AsteroidsManager::AsteroidsManager(SDLGame* game) : GameObject(game), rotationPhysics_(5),
+	astroImage_(game->getResources()->getImageTexture(Resources::Astroid)), numAsteroids(0) {
 }
 
-
-AsteroidsManager::~AsteroidsManager()
-{
-	for (Asteroid* a : asteroids_)
-		delete a;
+AsteroidsManager::~AsteroidsManager() {
 }
 
-void AsteroidsManager::update(Uint32 time)
-{
+vector<Asteroid*>& AsteroidsManager::getAsteroids() {
+	return asteroids_;
+}
+
+void AsteroidsManager::handleInput(Uint32 time, const SDL_Event& event) {
+}
+
+void AsteroidsManager::update(Uint32 time) {
 	for (Asteroid* a : asteroids_)
-		if (a->isActive())
+		if (a->isActive()) {
 			a->update(time);
+		}
 }
 
-void AsteroidsManager::render(Uint32 time)
-{
+void AsteroidsManager::render(Uint32 time) {
 	for (Asteroid* a : asteroids_)
-		if (a->isActive())
+		if (a->isActive()) {
 			a->render(time);
+		}
 }
 
-// manejo de mensajes
-void AsteroidsManager::receive(Message * msg)
-{
-	switch (msg->id_) {
-	case BULLET_ASTROID_COLLISION: {
-		BulletAstroidCollision * a = static_cast<BulletAstroidCollision*>(msg); // se puede hacer static porque solo ese tipo pasa ese mensaje concreto
-		asteroidCollision(a->astroid_);
-		break; 
-	}
-	case ROUND_START:
-		initAsteroids();
+void AsteroidsManager::receive(Message* msg) {
+	switch (msg->mType_) {
+	case ASTEROID_INFO:
+		initAsteroid(static_cast<PlayerInfoMsg*>(msg)->clientId_);
+		break;
+	case GAME_START:
+		startGame();
+		break;
+	case ASTEROID_STATE:
+		updateAsteroidState(static_cast<AsteroidStateMsg*>(msg));
 		break;
 	}
 }
 
-// Busca el primer asteroide inactivo o crea uno nuevo al final
 Asteroid * AsteroidsManager::getAsteroidDead()
 {
 	// recorre la lista de asteroides buscando uno inactivo
@@ -66,98 +65,63 @@ Asteroid * AsteroidsManager::getAsteroidDead()
 		return (*it);
 }
 
-void AsteroidsManager::initAsteroids()
+void AsteroidsManager::addAsteroid()
 {
-	srand(time(NULL));
-	for (Asteroid* a : asteroids_)
-		a->setActive(false);
+	Vector2D vel((1 - 2 * (rand() % 2))*((rand() % 10) + 1), ((rand() % 10) + 1));
+	vel.normalize();
+	vel = vel * 0.5;
+	Vector2D pos(rand() % getGame()->getWindowWidth(), rand() % 30);
+	Vector2D dir(0, -1);
+	int width = (rand() % 10) + 20;
+	int height = (rand() % 10) + 20;
 
-	int numAst = rand() % 6 + 5;
-	numOfAsteroids_ = numAst; // el num de asteroides activos es numAst
-	Asteroid* aux;
-	
-	for (int i = 0; i < numAst; i++) {
-		aux = getAsteroidDead(); // busca el primer asteroide desactivado
-		if (aux != nullptr) {
-			aux->setGenerations(rand() % 3 + 2); // generacion entre 2 y 4 incluidos
-			aux->setWidth(12+aux->getGenerations() * 10);
-			aux->setHeight(12+aux->getGenerations() * 10);
-			asteroidToLaterals(aux); // Lo inicializa en uno de los laterales
-		}
-	}
+	Asteroid* aux = getAsteroidDead();
+	aux->setDirection(dir);
+	aux->setPosition(pos);
+	aux->setVelocity(vel);
+	aux->setHeight(height);
+	aux->setWidth(width);
+	aux->setActive(true);
+	numAsteroids++;
 }
 
-// Inicializa el asteroide en uno de los laterales con vel aleatoria 
-void AsteroidsManager::asteroidToLaterals(Asteroid * asteroid)
+void AsteroidsManager::sendAsteroidsState()
 {
-	// primero mira en que lado de la pantalla lo pone
-	// y luego la posicion exacta
-
-	// 0 arriba, 1 abajo, 2 izqu, 3 dcha
-	int lateral = rand() % 4;
-	double auxX, auxY;
-	double auxVelX, auxVelY;
-
-	if (asteroid != nullptr) {
-		asteroid->toggleActive(); // lo activa
-		// laterales superior e inferior (0,1)
-		if (lateral <= 1) {
-			auxX = rand() % game_->getWindowWidth(); // abajo
-			auxY = rand() % MARGEN;
-			if (lateral == 0) // arriba
-				auxY = game_->getWindowHeight() - auxY;
-		}
-		// laterales izq y dcha (2,3)
-		else {
-			auxY = rand() % game_->getWindowHeight(); // izq
-			auxX = rand() % MARGEN;
-			if (lateral == 3) //dcha
-				auxX = game_->getWindowWidth() - auxX;
-		}
-
-		// velocidad aleatoria
-		auxVelX = (double)(rand() % VEL_MAX + 1)/100;
-		auxVelY = (double)(rand() % VEL_MAX + 1)/100;
-
-		Vector2D vel = { auxVelX, auxVelY };
-		int angleRnd = rand() % 360;
-		vel.rotate(angleRnd);
-
-		asteroid->setPosition({ auxX, auxY });
-		asteroid->setVelocity(vel);
-		asteroid->setDirection(vel);
-	}
+	Asteroid* a = asteroids_[numAsteroids - 1];
+	AsteroidStateMsg msg = { //
+		(Uint8)numAsteroids,
+		a->getPosition(), //
+		a->getDirection(), //
+		a->getVelocity(), //
+		a->getWidth(), //
+		a->getHeight() //
+	};
+	send(&msg);
 }
 
-void AsteroidsManager::asteroidCollision(Asteroid * asteroid)
+////////////////TEMP
+
+void AsteroidsManager::startGame()
 {
-	asteroid->toggleActive(); // lo pone a inactivo
-	numOfAsteroids_--;
-	 
-	// si es de gen > 1, crea asteroides de generacion inferior rotados 30º
-	if (asteroid->getGenerations() > 1) {
-		Vector2D vel, pos;
-		int nextGen = asteroid->getGenerations() - 1;
-		int babyAst = rand() % 3 + 2;
-		Asteroid* a;
-		numOfAsteroids_ += babyAst;
-
-		for (int i = 0; i < babyAst; i++) {
-			vel = asteroid->getVelocity();
-			vel.rotate(i * 30);
-			pos = asteroid->getPosition() + vel;
-
-			a = getAsteroidDead();
-			a->setActive(true);
-			a->setGenerations(nextGen);
-			a->setWidth(12 + a->getGenerations() * 10);
-			a->setHeight(12 + a->getGenerations() * 10);
-			a->setDirection(vel);
-			a->setVelocity(vel);
-			a->setPosition(pos);
-		}
-	}
-
-	if (numOfAsteroids_ <= 0)
-		send(&Message(NO_MORE_ATROIDS));
+	addAsteroid();
+	sendAsteroidsState();
 }
+
+void AsteroidsManager::initAsteroid(Uint8 id)
+{
+}
+
+void AsteroidsManager::updateAsteroidState(AsteroidStateMsg * msg)
+{
+	Asteroid* a = asteroids_[msg->Id_];
+
+	if (a == nullptr) {
+		a = getAsteroidDead();
+	}
+	a->setWidth(msg->width_);
+	a->setHeight(msg->height_);
+	a->setPosition(msg->pos_);
+	a->setDirection(msg->dir_);
+	a->setVelocity(msg->vel_);
+}
+

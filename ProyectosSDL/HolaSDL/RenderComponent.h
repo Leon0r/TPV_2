@@ -1,5 +1,4 @@
-#ifndef RENDERCOMPONENT_H_
-#define RENDERCOMPONENT_H_
+#pragma once
 
 #include "GameObject.h"
 
@@ -13,4 +12,3 @@ public:
 	virtual void render(GameObject* o, Uint32 time) = 0;
 };
 
-#endif /* RENDERCOMPONENT_H_ */

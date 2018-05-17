@@ -1,5 +1,4 @@
-#ifndef GAMECTRLINPUTCOMPONENT_H_
-#define GAMECTRLINPUTCOMPONENT_H_
+#pragma once
 
 #include "InputComponent.h"
 
@@ -13,4 +12,3 @@ public:
 	virtual void handleInput(GameObject* o, Uint32 time, const SDL_Event& event);
 };
 
-#endif /* GAMECTRLINPUTCOMPONENT_H_ */

@@ -1,5 +1,4 @@
-#ifndef CONTAINTER_H_
-#define CONTAINTER_H_
+#pragma once
 
 #include "GameObject.h"
 #include "InputComponent.h"
@@ -34,4 +33,4 @@ private:
 	vector<RenderComponent*> renderComp_;
 };
 
-#endif /* CONTAINTER_H_ */
+#pragma once

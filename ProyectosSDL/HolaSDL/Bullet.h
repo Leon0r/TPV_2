@@ -1,17 +1,21 @@
 #pragma once
+
 #include "Container.h"
-class Bullet :
-	public Container
-{
+
+
+/*
+ *
+ */
+class Bullet: public Container {
 public:
 	Bullet(SDLGame* game);
 	virtual ~Bullet();
-	void setFighterID(int id) { fighterID_ = id; }
-	int getFighterID() { return fighterID_; }
-	bool isIndestructible() { return indestructible; }
-	void setIndestructible(bool indstruct) { indestructible = indstruct; }
+	void setFighterId(Uint8 id);
+	Uint8 getFighterId();
+	void setBulletId(Uint16 id);
+	Uint16 getBulletId();
 private:
-	int fighterID_;
-	bool indestructible = false; // si se destruye al chocar con el primer asteroide o no
+	Uint8 fighterId_;
+	Uint16 bulletId_;
 };
 

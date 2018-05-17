@@ -1,15 +1,18 @@
-#ifndef SDLGAME_H_
-#define SDLGAME_H_
+#pragma once
 
 #include "sdl_includes.h"
 #include <string>
 #include <vector>
+#include <map>
 #include "Resources.h"
+#include "ClientConnection.h"
+
+using namespace std;
 
 class SDLGame {
 public:
+	const static int _MAX_PLAYERS_ = 10;
 
-public:
 	SDLGame(std::string windowTitle_, int width, int height);
 	virtual ~SDLGame();
 
@@ -18,6 +21,15 @@ public:
 	int getWindowWidth() const; // returns the window width
 	int getWindowHeight() const; // returns the window height
 	const Resources* getResources() const; // returns a pointer to the resources
+
+	// for SDLNet games
+	Uint8 getClientId() const;
+	bool isMasterClient() const;
+	ClientConnection& getConnection();
+
+	// some general properties mechanism, simply implemented with a map
+	void   setProp(string key, string value);
+	string getProp(string key);
 
 	// abstract methods to be implemented by subclasses
 	virtual void start() = 0; // start the game
@@ -37,7 +49,9 @@ protected:
 	std::string windowTitle_; // window title
 	int width_; // window width
 	int height_; // window height
+	Uint8 client_id;
+	ClientConnection conn_;
 
+	map<string,string> properties_;
 };
 
-#endif /* SDLGAME_H_ */

@@ -1,21 +1,19 @@
-#ifndef OBSERVABLE_H_
-#define OBSERVABLE_H_
+#pragma once
 
 #include "Observer.h"
+#include <vector>
 
-class Observable
-{
-	std::vector<Observer*> observers_;
-
+/*
+ *
+ */
+class Observable {
 public:
-	Observable() :observers_() {}
-	virtual ~Observable() {}
-	virtual void registerObserver(Observer* o) { observers_.push_back(o); }
+	Observable();
+	virtual ~Observable();
+	virtual void registerObserver(Observer* o);
 	virtual void removeObserver(Observer* o);
-	virtual void send(Message* msg) {
-		for (Observer* o : observers_)
-			o->receive(msg);
-	}
+	virtual void send(Message* msg);
+private:
+	std::vector<Observer*> observers_;
 };
 
-#endif /* OBSERVABLE_H_ */

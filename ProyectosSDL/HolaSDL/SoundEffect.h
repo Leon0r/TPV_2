@@ -1,5 +1,4 @@
-#ifndef SOUNDEFFECT_H_
-#define SOUNDEFFECT_H_
+#pragma once
 
 #include "sdl_includes.h"
 #include <string>
@@ -17,4 +16,3 @@ private:
 	Mix_Chunk *chunck_ = nullptr;
 };
 
-#endif /* SOUNDEFFECT_H_ */

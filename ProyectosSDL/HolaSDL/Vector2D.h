@@ -1,5 +1,4 @@
-#ifndef VECTOR2D_H_
-#define VECTOR2D_H_
+#pragma once
 
 #include <iostream>
 
@@ -30,4 +29,3 @@ public:
 	friend std::ostream& operator<<(std::ostream& os, const Vector2D &v);
 };
 
-#endif /* VECTOR2D_H_ */

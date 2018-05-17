@@ -11,6 +11,10 @@ SDLGame* GameObject::getGame() const {
 	return game_;
 }
 
+void GameObject::setGame(SDLGame* game) {
+	game_ = game;
+}
+
 bool GameObject::isActive() const {
 	return active_;
 }
@@ -68,4 +72,3 @@ void GameObject::setDirection(const Vector2D &vel) {
 	direction_.set(vel);
 	direction_.normalize();
 }
-

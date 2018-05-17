@@ -1,25 +1,19 @@
-#ifndef IMAGERENDERER_H_
-#define IMAGERENDERER_H_
+#pragma once
 
 #include "RenderComponent.h"
+#include "Texture.h"
 
-/*
- *
- */
 class ImageRenderer: public RenderComponent {
 public:
-	ImageRenderer(Texture* image);
-	ImageRenderer(Texture * image, Vector2D numFrames, Vector2D frame);
+	ImageRenderer(Texture* texture);
+	ImageRenderer(Texture* texture, SDL_Rect clip);
 
 	virtual ~ImageRenderer();
 	virtual void render(GameObject* o, Uint32 time);
-	SDL_Rect getDestRect(GameObject * o); // calcula el Rect de destino
 
 private:
-	Texture* image_;
-	SDL_Rect rectFrame;
-	Vector2D numFrames_ = { 1,1 };
-	Vector2D frame_ = { 0,0 };
+	Texture* texture_;
+	SDL_Rect clip_;
+	Vector2D direction_;
 };
 
-#endif /* IMAGERENDERER_H_ */

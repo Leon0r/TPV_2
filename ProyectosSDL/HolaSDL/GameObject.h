@@ -1,5 +1,4 @@
-#ifndef GAMEOBJECT_H_
-#define GAMEOBJECT_H_
+#pragma once
 
 #include "SDLGame.h"
 #include "Vector2D.h"
@@ -11,6 +10,7 @@ public:
 	virtual ~GameObject();
 
 	SDLGame* getGame() const;
+	void setGame(SDLGame* game);
 
 	bool isActive() const;
 	void setActive(bool active);
@@ -51,4 +51,3 @@ protected:
 
 };
 
-#endif /* GAMEOBJECT_H_ */

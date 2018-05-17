@@ -1,83 +1,118 @@
-#ifndef MESSAGES_H_
-#define MESSAGES_H_
+#pragma once
 
-#include "Asteroid.h"
-#include "Bullet.h"
-#include "Fighter.h"
+#include "sdl_includes.h"
+#include "Vector2D.h"
 
 enum MessageId {
-	BULLET_ASTROID_COLLISION,
-	BULLET_FIGHTER_COLLISION,
-	BULLET_BONUS_COLLISION,
-	ASTROID_FIGHTER_COLLISION,
-	FIGHTER_SHOOT,
+	CONNECTED,
+	JOINING_GAME,
+	PLAYER_INFO,
+	ASTEROID_INFO,
+	GAME_IS_READY,
+	GAME_START,
 	GAME_OVER,
-	ROUND_START,
-	ROUND_OVER,
-	BULLET_CREATED,
-	NO_MORE_ATROIDS,
-	BADGE_ON,
-	BADGE_OFF
+	FIGHTER_STATE,
+	ASTEROID_STATE,
+	FIGHTER_SHOOT,
+	BULLET_FIGHTER_COLLISION, 
+	ADD_ASTEROID
 };
 
+typedef Uint16 header_t_;
+
+// generic message -- note the size field
 struct Message {
-	Message(MessageId id) :
-			id_(id) {
+	Message(MessageId mType, header_t_ size = sizeof(Message)) :
+			size_(size), mType_(mType) {
 	}
-	MessageId id_;
+	header_t_ size_;
+	Uint8 mType_; // we have at most 256 different kinds of messages
 };
 
-struct BulletAstroidCollision: Message {
-	BulletAstroidCollision(Bullet* bullet, Asteroid* astroid) :
-			Message(BULLET_ASTROID_COLLISION), bullet_(bullet), astroid_(
-					astroid) {
+// this message is sent by the server to the client to inform her
+// with the user id.
+struct ConnectedMsg: Message {
+	ConnectedMsg(Uint8 clientId) :
+			Message(CONNECTED, sizeof(ConnectedMsg)), clientId_(clientId) {
 	}
-	Bullet* bullet_;
-	Asteroid* astroid_;
+	Uint8 clientId_;
 };
 
-struct BulletFighterCollision: Message {
-	BulletFighterCollision(Bullet* bullet, Fighter* fighter) :
-			Message(BULLET_FIGHTER_COLLISION), bullet_(bullet), fighter_(
-					fighter) {
+// A message sent by a client when joining the game. In principle it
+// should be processed by the MASTER client only
+struct JoiningGameMsg: Message {
+	JoiningGameMsg(Uint8 clientId) :
+			Message(JOINING_GAME, sizeof(JoiningGameMsg)), clientId_(clientId) {
 	}
-	Bullet* bullet_;
-	Fighter* fighter_;
+	Uint8 clientId_;
 };
 
-struct BulletBonusCollision : Message {
-	BulletBonusCollision(Bullet* bullet) :
-		Message(BULLET_BONUS_COLLISION), bullet_(bullet) {
+// A message sent by a client when joining the game. In principle it
+// should be processed by the MASTER client only
+struct PlayerInfoMsg: Message {
+	PlayerInfoMsg(Uint8 clientId) :
+			Message(PLAYER_INFO, sizeof(PlayerInfoMsg)), clientId_(clientId) {
 	}
-	Bullet* bullet_;
+	Uint8 clientId_;
 };
 
-struct AstroidFighterCollision: Message {
-	AstroidFighterCollision(Asteroid* astroid, Fighter* fighter) :
-			Message(ASTROID_FIGHTER_COLLISION), astroid_(astroid), fighter_(
-					fighter) {
-	}
 
-	Asteroid* astroid_;
-	Fighter* fighter_;
+struct FighterStateMsg: Message {
+	FighterStateMsg(Uint8 clientId, Vector2D pos, Vector2D dir, Vector2D vel,
+			double width, double height) :
+			Message(FIGHTER_STATE, sizeof(FighterStateMsg)), clientId_(
+					clientId), pos_(pos), dir_(dir), vel_(vel), width_(width), height_(
+					height) {
+	}
+	Uint8 clientId_;
+	Vector2D pos_;
+	Vector2D dir_;
+	Vector2D vel_;
+	double width_;
+	double height_;
 };
 
-struct FighterIsShooting: Message {
-	FighterIsShooting(Fighter* fighter, Vector2D bulletPosition,
-			Vector2D bulletVelocity, bool bulletIndestructible) :
-			Message(FIGHTER_SHOOT), fighter_(fighter), bulletPosition_(
-					bulletPosition), bulletVelocity_(bulletVelocity), 
-					bulletIndestructible_(bulletIndestructible) {
+struct AsteroidStateMsg : Message {
+	AsteroidStateMsg(Uint8 Id, Vector2D pos, Vector2D dir, Vector2D vel,
+		double width, double height) :
+		Message(ASTEROID_STATE, sizeof(FighterStateMsg)), Id_(
+			Id), pos_(pos), dir_(dir), vel_(vel), width_(width), height_(
+				height) {
 	}
+	Uint8 Id_;
+	Vector2D pos_;
+	Vector2D dir_;
+	Vector2D vel_;
+	double width_;
+	double height_;
+};
 
-	Fighter* fighter_;
+
+struct FighterIsShootingMsg: Message {
+	FighterIsShootingMsg(Uint8 fighterId, Vector2D bulletPosition,
+			Vector2D bulletVelocity) :
+			Message(FIGHTER_SHOOT, sizeof(FighterIsShootingMsg)), fighterId_(
+					fighterId), bulletPosition_(bulletPosition), bulletVelocity_(
+					bulletVelocity) {
+	}
+	Uint8 fighterId_;
 	Vector2D bulletPosition_;
 	Vector2D bulletVelocity_;
-	bool bulletIndestructible_;
 };
 
-struct BadgeIsOn : Message {
-	BadgeIsOn(int BadgeID):Message(BADGE_ON), badgeID_(BadgeID){}
-	int badgeID_;
+
+struct BulletFighterCollisionMsg: Message {
+	BulletFighterCollisionMsg(Uint8 fighterId, Uint16 bulletId, Uint8 fbulletId) :
+			Message(BULLET_FIGHTER_COLLISION, sizeof(BulletFighterCollisionMsg)), fighterId_(
+					fighterId), bulletId_(bulletId), bulletOwnerId_(fbulletId) {
+	}
+	Uint8 fighterId_;
+	// the following uniquely identify a bullet
+	Uint16 bulletId_;
+	Uint8 bulletOwnerId_;
 };
-#endif /* MESSAGES_H_ */
+
+
+// this value should be bigger than the size of all messages
+#define MAX_MSG_SIZE 1000
+

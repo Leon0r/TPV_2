@@ -1,46 +1,52 @@
 #pragma once
-#include <time.h>
+
 #include "GameObject.h"
-#include "Observer.h"
-#include "Observable.h"
 #include "ImageRenderer.h"
 #include "CircularMotionPhysics.h"
 #include "RotationPhysics.h"
+#include "Observer.h"
+#include "SkeletonRenderer.h"
+#include "Observable.h"
+#include "Asteroid.h"
 
-const int MARGEN = 10; // distancia maxima a los bordes de pantalla
-const int VEL_MAX = 100;
-
-class AsteroidsManager :
-	public GameObject, public Observer, public Observable
+/*
+ *
+ */
+class AsteroidsManager: 
+	public GameObject, public Observer, public Observable 
 {
+
 public:
 	AsteroidsManager(SDLGame* game);
 	virtual ~AsteroidsManager();
+	virtual vector<Asteroid*>& getAsteroids();
 
-	virtual void handleInput(Uint32 time, const SDL_Event& event) {};
+	virtual void handleInput(Uint32 time, const SDL_Event& event);
 	virtual void update(Uint32 time);
 	virtual void render(Uint32 time);
-
-	virtual vector<Asteroid*>& getAsteroids() { return asteroids_; };
 	virtual void receive(Message* msg);
 
 private:
+
+	int numAsteroids;
 	// devuelve el 1º asteroide no activo si hay, 
 	// si  no, crea uno y lo añade a asteroids_
-	Asteroid* getAsteroidDead();
-	// pone todos los asteroides a noActivo 
-	// y crea los asteroides iniciales del juego
-	void initAsteroids();
-	// coloca los asteroides iniciales de principio de ronda en los laterales de la pantalla
-	void asteroidToLaterals(Asteroid* asteroid);
-	// reaccion al chocar un asteroide con una bala
-	void asteroidCollision(Asteroid* asteroid);
+	Asteroid * getAsteroidDead();
+	// Añade un asteroide al juego
+	virtual void addAsteroid();
 
-	vector<Asteroid*> asteroids_; //pool de asteroides
+	virtual void sendAsteroidsState();
+
+	vector<Asteroid*> asteroids_;
+
 	ImageRenderer astroImage_; // imagen del asteroide
 	CircularMotionPhysics circularPhysics_; // movimiento toroidal
 	RotationPhysics rotationPhysics_; // rotar asteroide todo el rato
 
-	int numOfAsteroids_; // numero de asteroides activos
+	//TEMP
+	virtual void startGame();
+	virtual void initAsteroid(Uint8 id);
+	virtual void updateAsteroidState(AsteroidStateMsg* msg);
+
 };
 

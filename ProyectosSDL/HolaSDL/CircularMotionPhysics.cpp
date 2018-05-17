@@ -1,30 +1,31 @@
 #include "CircularMotionPhysics.h"
 
-
-
-CircularMotionPhysics::CircularMotionPhysics()
-{
+CircularMotionPhysics::CircularMotionPhysics() {
 }
 
-
-CircularMotionPhysics::~CircularMotionPhysics()
-{
+CircularMotionPhysics::~CircularMotionPhysics() {
 }
 
-void CircularMotionPhysics::update(GameObject * o, Uint32 time)
-{
-	Vector2D position;
-	position=o->getPosition() + o->getVelocity();
-
-	if (position.getX() < 0)
-		position.setX(o->getGame()->getWindowWidth());
-	else if (position.getX() > (o->getGame()->getWindowWidth()))
-		position.setX(0);
-
-	if (position.getY() < 0)
-		position.setY(o->getGame()->getWindowHeight());
-	else if (position.getY() > o->getGame()->getWindowHeight())
-		position.setY(0);
-
-	o->setPosition(position);
+void CircularMotionPhysics::init(GameObject* o) {
 }
+
+void CircularMotionPhysics::update(GameObject* o, Uint32 time) {
+	if (o->isActive()) {
+		Vector2D p = o->getPosition()+o->getVelocity();
+
+		if (p.getX() >= o->getGame()->getWindowWidth()) {
+			p.setX(-o->getWidth()*0.1);
+		} else if (p.getX() + o->getWidth() <= 0) {
+			p.setX(o->getGame()->getWindowWidth()-o->getWidth()*0.1);
+		}
+
+		if (p.getY() >= o->getGame()->getWindowHeight()) {
+			p.setY(-o->getHeight()*0.1);
+		} else if (p.getY() + o->getHeight() <= 0) {
+			p.setY(o->getGame()->getWindowHeight()-o->getWidth()*0.1);
+		}
+
+		o->setPosition(p);
+	}
+}
+

@@ -1,5 +1,4 @@
-#ifndef PHYSICSCOMPONENT_H_
-#define PHYSICSCOMPONENT_H_
+#pragma once
 
 #include "GameObject.h"
 
@@ -13,4 +12,3 @@ public:
 	virtual void update(GameObject* o, Uint32 time) = 0;
 };
 
-#endif /* PHYSICSCOMPONENT_H_ */

@@ -14,16 +14,16 @@ std::vector<Resources::FontInfo> Resources::fontFiles_ {
 		{ "fonts/Capture_it.ttf", 16 }, { "fonts/Capture_it.ttf", 24 } };
 
 std::vector<Resources::TextMsgInfo> Resources::textMsgs_ { { "Hello World", {
-		COLOR(0xaaffffff) }, Resources::ARIAL16 }, { "Press Any Key ...", {
-		COLOR(0xaaffbbff) }, Resources::ARIAL24 }, { "Game Over!", { COLOR(
-		0xffffbbff) }, Resources::ARIAL24 }, { "Press ENTER to Continue", {
-		COLOR(0xaaffbbff) }, Resources::ARIAL24 } };
+		COLOR(0xaaffffff) }, Resources::ARIAL16 }, { "Press Enter to Start", {
+		COLOR(0xaaffbbff) }, Resources::ARIAL24 }, { "Game Over", { COLOR(
+		0xffffbbff) }, Resources::ARIAL24 }, { "Waiting for other players", {
+		COLOR(0xffffbbff) }, Resources::ARIAL24 }, };
 
 std::vector<std::string> Resources::musicFiles_ { "sound/beat.wav",
-		"sound/cheer.wav", "sound/boooo.wav", "sound/imperial_march.wav" };
+		"sound/cheer.wav", "sound/boooo.wav" };
 
 std::vector<std::string> Resources::soundEffectFiles_ { "sound/wall_hit.wav",
-		"sound/paddle_hit.wav", "sound/GunShot.wav", "sound/explosion.wav" };
+		"sound/paddle_hit.wav" };
 
 #include <iostream>
 

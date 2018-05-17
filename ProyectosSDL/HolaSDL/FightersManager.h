@@ -1,43 +1,48 @@
 #pragma once
+
+#include <map>
 #include "GameObject.h"
-#include "Observer.h"
-#include "ImageRenderer.h"
+#include "Fighter.h"
+#include "FreeMoveInputComponent.h"
 #include "CircularMotionPhysics.h"
-#include "AccelerationInputComponent.h"
-#include "RotationInputComponent.h"
+#include "ImageRenderer.h"
+#include "Observer.h"
+#include "Observable.h"
+#include "SkeletonRenderer.h"
 #include "GunInputComponent.h"
-#include "MultibulletGunInputComponent.h"
-#include "BadgeRenderer.h"
+#include "NetworkMessenger.h"
 
-class FightersManager :
-	public GameObject, public Observer
-{
+/*
+ *
+ */
+class FightersManager : public GameObject, public Observer, public Observable {
 public:
-	FightersManager(SDLGame* game, Observer* bulletsManager);
+	FightersManager(SDLGame* game, NetworkMessenger* nm, BulletsManager* bm);
 	virtual ~FightersManager();
-
-	virtual void handleInput(Uint32 time, const SDL_Event& event) { if (fighter_.isActive()) 
-		fighter_.handleInput(time, event); }
-	virtual void update(Uint32 time) { if (fighter_.isActive()) fighter_.update(time); }
-	virtual void render(Uint32 time) { if (fighter_.isActive()) fighter_.render(time); }
-
-	Fighter* getFighter() { return &fighter_; }
+	void init();
+	virtual void handleInput(Uint32 time, const SDL_Event& event);
+	virtual void update(Uint32 time);
+	virtual void render(Uint32 time);
 	virtual void receive(Message* msg);
+	vector<Fighter*>& getFighters();
 
 private:
-	virtual void badgeOn(int GunType);
-	virtual void badgeOff();
-	Fighter fighter_;
-	CircularMotionPhysics circularPhysics_; // movimiento toroidal
-	AccelerationInputComponent accelerationComp_; // para acelerar
-	ImageRenderer renderComp_; // imagen, sprite de a nave
-	RotationInputComponent rotationComp_; // para girar la nave con las teclas
-	vector<BaseGunInputComponent*> guns_; // armas del fighter
+	void initFighter(Uint8 id);
+	void startGame();
+	void endGame();
+	void sendPlayerState();
+	void updateFighterState(FighterStateMsg* msg);
+	void killPlayer(Uint8 id);
+	void enableFighters();
+	void disableFighters();
 
-	//BaseGunInputComponent* gunComp1_; // 5 balas cada 3 segundos
-	//BaseGunInputComponent* gunComp2_; // 10 segs de balas ilimitadas
-	//BaseGunInputComponent* gunComp3_; // multibullets
-	int badgeAct = 0;
-	BadgeRenderer badgeRender_; // renderer de la insignia del super arma
+	vector<Fighter*> fighters_;
+
+	FreeMoveInputComponent freeMove_;
+	CircularMotionPhysics circularMotionPhysics_;
+	ImageRenderer fighterImage_;
+	SkeletonRendered skeletonRendered_;
+	GunInputComponent gun_;
+
 };
 

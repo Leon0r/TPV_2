@@ -1,5 +1,4 @@
-#ifndef SDL_INCLUDES_H_
-#define SDL_INCLUDES_H_
+#pragma once
 
 /*
 whenever we need to include an SDL library we use this file. This way we can make the
@@ -15,11 +14,13 @@ program portable as paths might be different depending on the environment we use
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
 #include <SDL_image.h>
+#include <SDL_net.h>
 #elif defined(__APPLE__) && defined(__MACH__) // Apple OSX and iOS (Darwin)
 #include <SDL2/SDL.h>
 #include <SDL2_ttf/SDL_ttf.h>
 #include <SDL2_mixer/SDL_mixer.h>
 #include <SDL2_image/SDL_image.h>
+#include <SDL2_net/SDL_net.h>
 #else
 #error "SDL includes where not resolved correctly"
 #endif
@@ -45,4 +46,3 @@ program portable as paths might be different depending on the environment we use
 //
 #define COLOR(num) (num >> 24) & 0xff, (num >> 16) & 0xff, (num >> 8) & 0xff, num & 0xff
 
-#endif /* SDL_INCLUDES_H_ */

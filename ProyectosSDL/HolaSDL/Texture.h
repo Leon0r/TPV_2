@@ -1,5 +1,4 @@
-#ifndef TEXTURE_H_
-#define TEXTURE_H_
+#pragma once
 
 #include "sdl_includes.h"
 #include "Font.h"
@@ -31,4 +30,3 @@ private:
 	int height_;
 };
 
-#endif /* TEXTURE_H_ */

@@ -1,11 +1,24 @@
 #include "Observable.h"
 
-void Observable::removeObserver(Observer * o)
-{
-	std::vector<Observer*>::iterator it;
-	it = observers_.begin();
-	while (it != observers_.end() && *it != o) it++;
+Observable::Observable() {
+}
 
-	if (it != observers_.end())
-		observers_.erase(it);
+Observable::~Observable() {
+}
+
+void Observable::registerObserver(Observer* o) {
+	observers_.push_back(o);
+}
+
+void Observable::removeObserver(Observer* o) {
+	std::vector<Observer*>::iterator position = std::find(observers_.begin(),
+			observers_.end(), o);
+	if (position != observers_.end())
+		observers_.erase(position);
+}
+
+void Observable::send(Message* msg) {
+	for( Observer* o : observers_ ) {
+		o->receive(msg);
+	}
 }

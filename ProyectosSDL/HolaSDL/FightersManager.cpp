@@ -1,88 +1,151 @@
 #include "FightersManager.h"
+#include "Fighter.h"
+#include "NetworkMessenger.h"
 
+FightersManager::FightersManager(SDLGame* game, NetworkMessenger* nm,
+		BulletsManager* bm) :
+		GameObject(game), //
+		fighters_(), //
+		freeMove_(SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, 2, 5), //
+		circularMotionPhysics_(), //
+		fighterImage_(
+				game->getResources()->getImageTexture(Resources::Airplanes), {
+						47, 90, 207, 250 }), skeletonRendered_(), gun_(
+				SDLK_SPACE, 3000, 6) {
 
-
-FightersManager::FightersManager(SDLGame* game, Observer* bulletsManager) :GameObject(game),
-renderComp_(ImageRenderer(game->getResources()->getImageTexture(Resources::Airplanes), { 4,3 }, { 3,2 })),
-fighter_(Fighter(game, 0)), accelerationComp_(SDLK_UP, SDLK_DOWN, 0.2, 5, 0.9), rotationComp_(SDLK_LEFT, SDLK_RIGHT)
-{
-	guns_.push_back(new GunInputComponent(SDLK_SPACE, 5, 3000)); // gun basica (5 balas cada 3 segs)
-	guns_.push_back(new GunInputComponent(SDLK_SPACE, 5, 3000, true)); // igual que el anterior pero las balas no se destruyen al chocar con asteroides
-	guns_.push_back(new GunInputComponent(SDLK_SPACE, 3000, 1)); // gun badge (balas infinitas durante 10 segs)
-	guns_.push_back(new MultibulletGunInputComponent(SDLK_SPACE, 5, 3000)); // Dispara en estrella
-
-
-	for (BaseGunInputComponent* gun : guns_)
-		gun->registerObserver(bulletsManager);
-
-
-	fighter_.setPosition({ (double)(game_->getWindowWidth() / 2), (double)(game_->getWindowHeight() / 2) });
-	fighter_.setHeight(50.0);
-	fighter_.setWidth(50.0);
-	fighter_.addPhysicsComponent(&circularPhysics_);
-	fighter_.addInputComponent(&accelerationComp_);
-	fighter_.addInputComponent(&rotationComp_);
-	fighter_.addInputComponent(guns_.front());
-	fighter_.setWeapon(0);
-
-	fighter_.setActive(false);
-
-	fighter_.addRenderComponent(&renderComp_);
+	freeMove_.registerObserver(nm);
+	gun_.registerObserver(bm);
+	gun_.registerObserver(nm);
 }
 
-
-FightersManager::~FightersManager()
-{
-	for (BaseGunInputComponent* gun : guns_)
-		delete gun;
+void FightersManager::init() {
 }
 
-void FightersManager::receive(Message * msg)
-{
-	switch (msg->id_) {
-	case ROUND_START: {
-		fighter_.setActive(true);
-		fighter_.setPosition({ (double)(game_->getWindowWidth() / 2), (double)(game_->getWindowHeight() / 2) });
-		fighter_.setVelocity({ 0.1,0.1 });
+FightersManager::~FightersManager() {
+}
+
+void FightersManager::handleInput(Uint32 time, const SDL_Event& event) {
+	for (Fighter* f : fighters_)
+		if (f != nullptr && f->isActive())
+			f->handleInput(time, event);
+}
+
+void FightersManager::update(Uint32 time) {
+	for (Fighter* f : fighters_)
+		if (f != nullptr && f->isActive())
+			f->update(time);
+}
+
+void FightersManager::render(Uint32 time) {
+	for (Fighter* f : fighters_)
+		if (f != nullptr && f->isActive())
+			f->render(time);
+}
+
+void FightersManager::receive(Message* msg) {
+	switch (msg->mType_) {
+	case PLAYER_INFO:
+		initFighter(static_cast<PlayerInfoMsg*>(msg)->clientId_);
 		break;
-	}
-	case ROUND_OVER: 
-		fighter_.setActive(false);
-		break; 
+	case GAME_START:
+		startGame();
+		break;
 	case GAME_OVER:
-		fighter_.setActive(false);
+		endGame();
 		break;
-	case BADGE_ON: {
-		BadgeIsOn* b = static_cast<BadgeIsOn*>(msg);
-		badgeOn(b->badgeID_);
-		break; }
-	case BADGE_OFF:
-		badgeOff();
+	case FIGHTER_STATE:
+		updateFighterState(static_cast<FighterStateMsg*>(msg));
+		break;
+	case BULLET_FIGHTER_COLLISION:
+		killPlayer(static_cast<BulletFighterCollisionMsg*>(msg)->fighterId_);
 		break;
 	}
 }
 
-void FightersManager::badgeOn(int GunType)
-{
-	//// quitar todas las armas y poner la de tipo GunType
-	if (GunType > 0 && GunType < guns_.size()) {
-		for (BaseGunInputComponent* gun : guns_)
-			fighter_.delInputComponent(gun);
+vector<Fighter*>& FightersManager::getFighters() {
+	return fighters_;
+}
 
-		fighter_.addInputComponent(guns_[GunType]);
-		badgeRender_.setBadge(GunType);
-		fighter_.setWeapon(GunType);
-		fighter_.addRenderComponent(&badgeRender_);
+void FightersManager::initFighter(Uint8 id) {
+	if (fighters_.size() <= id) {
+		fighters_.resize(id + 1);
+	}
+	if (fighters_[id] == nullptr) {
+		fighters_[id] = new Fighter(getGame(), id);
+		fighters_[id]->addRenderComponent(&fighterImage_);
+		fighters_[id]->addPhysicsComponent(&circularMotionPhysics_);
+		fighters_[id]->setActive(false);
+		if (id == getGame()->getClientId()) {
+			fighters_[id]->addInputComponent(&freeMove_);
+			fighters_[id]->addInputComponent(&gun_);
+			fighters_[id]->addRenderComponent(&skeletonRendered_);
+		}
 	}
 }
 
-void FightersManager::badgeOff()
-{
-	// quita todas las armas y pone la basica ([0])
-	for (BaseGunInputComponent* gun : guns_)
-		fighter_.delInputComponent(gun);
+void FightersManager::startGame() {
 
-	fighter_.addInputComponent(guns_[0]);
-	fighter_.delRenderComponent(&badgeRender_);
-	fighter_.setWeapon(0);
+	// choose an initial setting for the local player and send it over
+
+	Fighter* f = fighters_[getGame()->getClientId()];
+
+	f->setPosition(
+			Vector2D(rand() % getGame()->getWindowWidth(),
+					rand() % getGame()->getWindowHeight()));
+	f->setWidth(50);
+	f->setHeight(50);
+	f->setVelocity( Vector2D(0,0));
+	f->setDirection( Vector2D(0,-1));
+
+	enableFighters();
+
+	sendPlayerState();
+}
+
+void FightersManager::sendPlayerState() {
+	Fighter* f = fighters_[getGame()->getClientId()];
+	FighterStateMsg msg = { //
+			f->getId(), //
+			f->getPosition(), //
+			f->getDirection(), //
+			f->getVelocity(), //
+			f->getWidth(), //
+			f->getHeight() //
+	};
+	send(&msg);
+}
+
+void FightersManager::updateFighterState(FighterStateMsg* msg) {
+	Fighter* f = fighters_[msg->clientId_];
+
+	if (f != nullptr) {
+		f->setWidth(msg->width_);
+		f->setHeight(msg->height_);
+		f->setPosition(msg->pos_);
+		f->setDirection(msg->dir_);
+		f->setVelocity(msg->vel_);
+	}
+}
+
+void FightersManager::endGame() {
+	disableFighters();
+}
+
+void FightersManager::killPlayer(Uint8 id) {
+	if (fighters_[id] != nullptr)
+		fighters_[id]->setActive(false);
+}
+
+void FightersManager::enableFighters() {
+	for (Fighter* f : fighters_) {
+		if (f != nullptr)
+			f->setActive(true);
+	}
+}
+
+void FightersManager::disableFighters() {
+	for (Fighter* f : fighters_) {
+		if (f != nullptr)
+			f->setActive(false);
+	}
 }

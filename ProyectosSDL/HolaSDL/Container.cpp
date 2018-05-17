@@ -8,24 +8,24 @@ Container::~Container() {
 }
 
 void Container::handleInput(Uint32 time, const SDL_Event& event) {
-	for (InputComponent* ic : inputComp_) {
-		if (isActive())
+	if (isActive())
+		for (InputComponent* ic : inputComp_) {
 			ic->handleInput(this, time, event);
-	}
+		}
 }
 
 void Container::update(Uint32 time) {
-	for (PhysicsComponent* pc : physicsComp_) {
-		if (isActive())
+	if (isActive())
+		for (PhysicsComponent* pc : physicsComp_) {
 			pc->update(this, time);
-	}
+		}
 }
 
 void Container::render(Uint32 time) {
-	for (RenderComponent* rc : renderComp_) {
-		if (isActive())
+	if (isActive())
+		for (RenderComponent* rc : renderComp_) {
 			rc->render(this, time);
-	}
+		}
 }
 
 void Container::addInputComponent(InputComponent* ic) {

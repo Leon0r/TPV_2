@@ -1,21 +1,22 @@
 #pragma once
-#include "SDLGame.h"
-#include "StarTreckBulletsManager.h"
-#include "FightersManager.h"
-#include "CollisionManager.h"
-#include "AsteroidsManager.h"
-#include "GameManager.h"
-#include "SoundManager.h"
-#include "Bonus.h"
 
-class AsteroidsGame :
-	public SDLGame
-{
-	// juego general
+#include <vector>
+
+#include "AsteroidsManager.h"
+#include "SDLGame.h"
+#include "GameObject.h"
+#include "FightersManager.h"
+#include "GameManager.h"
+#include "CollisionManager.h"
+#include "NetworkMessenger.h"
+
+class AsteroidsGame: public SDLGame {
+
 public:
-	AsteroidsGame();
+	AsteroidsGame(char* host, int port);
 	virtual ~AsteroidsGame();
 
+	// from SDLGame
 	void start();
 	void stop();
 
@@ -26,17 +27,20 @@ private:
 	void update(Uint32 time);
 	void render(Uint32 time);
 
-	const static int _WINDOW_WIDTH_ = 800;
-	const static int _WINDOW_HEIGHT_ = 600;
-	bool exit_;
-	std::vector<GameObject*> actors_;
+	const static int _WINDOW_WIDTH_ = 640;
+	const static int _WINDOW_HEIGHT_ = 480;
 
-	StarTreckBulletsManager bulletsManager_;
+	bool exit_;
+
+	std::vector<GameObject*> actors_;
+	char* host_;
+	int port_;
+
+	NetworkMessenger networkMessenger_;
+	GameManager gameManager_;
+	BulletsManager bulletsManager_;
 	FightersManager fightersManager_;
 	AsteroidsManager asteroidsManager_;
 	CollisionManager collisionManager_;
-	GameManager gameManager_;
-	SoundManager soundManager_;
-	Bonus bonus_;
 };
 

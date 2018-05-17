@@ -1,18 +1,16 @@
 #pragma once
+
 #include "Container.h"
-class Fighter :
-	public Container
-{
+
+/*
+ *
+ */
+class Fighter: public Container {
 public:
-	Fighter(SDLGame* game, int id);
+	Fighter(SDLGame* game, Uint8 id);
 	virtual ~Fighter();
-	int getID() { return id_; }
-
-	int getWeapon() { return weapon_; }
-	void setWeapon(int gun) { weapon_ = gun; }
-
+	Uint8 getId() const;
 private:
-	int id_;
-	int weapon_ = 0;
+	Uint8 id_;
 };
 

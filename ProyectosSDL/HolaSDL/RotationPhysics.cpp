@@ -1,28 +1,13 @@
 #include "RotationPhysics.h"
 
-
-
-RotationPhysics::RotationPhysics(int velRot):velRot_(velRot)
-{
+RotationPhysics::RotationPhysics(int angle) : angle_(angle) {
 }
 
-
-RotationPhysics::~RotationPhysics()
-{
+RotationPhysics::~RotationPhysics() {
 }
 
-void RotationPhysics::update(GameObject * o, Uint32 time)
-{
-	if (t + velRot_ < time) {
-		t = SDL_GetTicks();
-		angle++;
-
-		if (angle == 360.0) 
-			angle = 0.0;
-
-		Vector2D aux = o->getDirection();
-		int a = o->getDirection().angle({ 0,-1 });
-		aux.rotate(a + angle);
-		o->setDirection(aux);
-	}
+void RotationPhysics::update(GameObject* o, Uint32 time) {
+	Vector2D d = o->getDirection();
+	d.rotate(angle_);
+	o->setDirection(d);
 }

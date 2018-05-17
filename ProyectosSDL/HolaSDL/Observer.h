@@ -1,5 +1,4 @@
-#ifndef OBSERVER_H_
-#define OBSERVER_H_
+#pragma once
 
 #include "GameObject.h"
 #include "Messages.h"
@@ -14,4 +13,3 @@ public:
 	virtual void receive(Message* msg) = 0;
 };
 
-#endif /* OBSERVER_H_ */

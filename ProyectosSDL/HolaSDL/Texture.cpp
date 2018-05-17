@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include <iostream>
 
 Texture::Texture() :
 		texture_(nullptr), width_(0), height_(0) {
@@ -47,6 +48,7 @@ bool Texture::loadFromImg(SDL_Renderer* renderer, std::string fileName) {
 		}
 		SDL_FreeSurface(surface);
 	}
+
 	return texture_ != nullptr;
 }
 

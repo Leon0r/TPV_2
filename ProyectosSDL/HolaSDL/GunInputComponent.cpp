@@ -1,28 +1,39 @@
 #include "GunInputComponent.h"
-#include <algorithm>  
+#include <math.h>
+#include <algorithm>
 
-
-GunInputComponent::GunInputComponent(SDL_Keycode trigger, int bullets, Uint32 timeWaiting, bool superBullet):
-BaseGunInputComponent(trigger, bullets, timeWaiting, superBullet)
-{
+GunInputComponent::GunInputComponent(SDL_Keycode shootButton,
+		Uint32 timeInterval, Uint8 shotsPerInterval) :
+		InputComponent(), shootButton_(shootButton), timeInterval_(
+				timeInterval), shotsPerInterval_(shotsPerInterval) {
+	lastTimeShoot_ = 0;
+	numOfShoots_ = 0;
 }
 
-
-GunInputComponent::~GunInputComponent()
-{
+GunInputComponent::~GunInputComponent() {
 }
 
-// crea la bala disparada
-void GunInputComponent::shoot(GameObject* o)
-{
-	Vector2D pos = o->getPosition();
-	Vector2D a = { o->getWidth() / 2, o->getHeight() / 2 };
-	pos = pos + a;
-	pos = pos + (o->getDirection()*o->getHeight() / 2);
+void GunInputComponent::handleInput(GameObject* o, Uint32 time,
+		const SDL_Event& event) {
 
-	double mgn = max((o->getVelocity().magnitude()*velBullet), 2.0); // velocidad calculada a partir de la vel del fighter para que no se choque con su propia bala
-	Vector2D velB = o->getDirection()*mgn;
+	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == shootButton_) {
+		if (time - lastTimeShoot_ > timeInterval_) {
+			lastTimeShoot_ = time;
+			numOfShoots_ = 0;
+		}
+		if (numOfShoots_ < shotsPerInterval_) {
+			numOfShoots_++;
+			shoot(static_cast<Fighter*>(o));
+		}
+	}
+}
 
-	FighterIsShooting msg(static_cast<Fighter*>(o), pos, velB, superBullet_);
+void GunInputComponent::shoot(Fighter* o) {
+	Vector2D bulletPoition = o->getPosition()
+			+ Vector2D(o->getWidth() / 2, o->getHeight() / 2)
+			+ (o->getDirection() * ((o->getHeight() / 2) + 2));
+	Vector2D bulletVelocity = o->getDirection()
+			* std::max(o->getVelocity().magnitude() * 2, 2.0);
+	FighterIsShootingMsg msg = { o->getId(), bulletPoition, bulletVelocity };
 	send(&msg);
 }

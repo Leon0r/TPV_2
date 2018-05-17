@@ -1,5 +1,4 @@
-#ifndef FILLRECTRENDERER_H_
-#define FILLRECTRENDERER_H_
+#pragma once
 
 #include "RenderComponent.h"
 
@@ -16,4 +15,3 @@ private:
 	SDL_Color color_;
 };
 
-#endif /* FILLRECTRENDERER_H_ */

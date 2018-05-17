@@ -1,62 +1,45 @@
 #include "CollisionManager.h"
+#include "Collisions.h"
 
-
-
-CollisionManager::CollisionManager(SDLGame* game, AsteroidsManager* asteroidMngr, BulletsManager* bulletMngr, FightersManager* figterMngr, Bonus* bonus) :
-	GameObject(game), bulletsManager_(bulletMngr), asteroidsManager_(asteroidMngr), fightersManager_(figterMngr), bonus_(bonus)
-{
+CollisionManager::CollisionManager(SDLGame* game,
+		BulletsManager* bulletsManager, FightersManager* fightersManager,
+		AsteroidsManager* asteroidsManager) :
+		GameObject(game), bulletsManager_(bulletsManager), fightersManager_(
+				fightersManager), asteroidsManager_(asteroidsManager) {
 }
 
-
-CollisionManager::~CollisionManager()
-{
+CollisionManager::~CollisionManager() {
 }
 
-void CollisionManager::update(Uint32 time)
-{
-	vector<Bullet*> bullets = bulletsManager_->getBullets();
+void CollisionManager::handleInput(Uint32 time, const SDL_Event& event) {
+}
+
+void CollisionManager::update(Uint32 time) {
+
+	// only the master client checks collisions
+	if (!getGame()->isMasterClient())
+		return;
+
+	vector<vector<Bullet*>> bullets = bulletsManager_->getBullets();
+	vector<Fighter*> fighters = fightersManager_->getFighters();
 	vector<Asteroid*> asteroids = asteroidsManager_->getAsteroids();
-	Fighter* fighter = fightersManager_->getFighter();
 
-	
-
-	// fighters with asteroids
-	if (fighter->isActive()) {
-		for (Asteroid* a : asteroids) {
-			if (a->isActive() && Collisions::collidesWithRotation(fighter, a)) {
-				Message msg (AstroidFighterCollision(a, fighter));
-				send(&msg);
+	for (vector<Bullet*>& fighterBullets_ : bullets) {
+		for (Bullet* b : fighterBullets_) {
+			if (b->isActive()) {
+				for (Fighter* f : fighters) {
+					if (f != nullptr && f->isActive()
+							&& Collisions::collidesWithRotation(b, f)) {
+						BulletFighterCollisionMsg m = { f->getId(),
+								b->getBulletId(), b->getFighterId() };
+						send(&m);
+						break; // it can kill only one fighter
+					}
+				}
 			}
 		}
 	}
+}
 
-	vector<Asteroid*>::iterator it;
-	// bullets with asteroids
-	// por cada bala mira si ha chocado con los asteroides solo si estan activos ambos
-	// chequea balas sobre asteroides para que no cuente colisiones de balas 2 veces
-	for (Bullet* bull : bullets) {
-		if (bull->isActive()) {
-			it = asteroids.begin();
-			while (it != asteroids.end() && !Collisions::collidesWithRotation(bull, (*it)))
-				it++;
-			if (it != asteroids.end() && (*it)->isActive()) {
- 				Message* msg  = new BulletAstroidCollision(bull, (*it));
-  				send(msg);
-				delete msg;
-				msg = nullptr;
-			}
-		}
-	}
-
-	// Bullet with bonus
-	if (bonus_->isActive()) {
-		for (Bullet* bull : bullets) {
-			if (bull->isActive() && Collisions::collidesWithRotation(bull, bonus_)) {
-				Message* msg = new BulletBonusCollision(bull);
-				send(msg);
-				delete msg;
-				msg = nullptr;
-			}
-		}
-	}
+void CollisionManager::render(Uint32 time) {
 }

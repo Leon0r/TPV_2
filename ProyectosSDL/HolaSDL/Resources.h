@@ -1,5 +1,4 @@
-#ifndef RESOURCES_H_
-#define RESOURCES_H_
+#pragma once
 
 #include "Texture.h"
 #include "Font.h"
@@ -25,15 +24,16 @@ public:
 		AIIcon,
 		SpaceShips,
 		Airplanes,
-		Star,
+		Star	,
 		Astroid,
 		ExplosionImage,
 		Badges
+
 	};
 
 	// Text Messages - each is loaded as an instance of a texture
 	enum TextId {
-		HelloWorld, PresAnyKey, GameOver, PressEnter
+		HelloWorld, PressEnterToStart, GameOver, Waiting
 	};
 
 	// Fonts -- they are pair of filename and size, each is loaded as
@@ -47,14 +47,14 @@ public:
 	// Music -- each file is loaded as an instance of Music
 	//
 	enum MusicId {
-		Beat, Cheer, Boooo, ImperialMarch
+		Beat, Cheer, Boooo
 	};
 
 
 	// Sound Effects -- each file is loaded as an instance of SoundEffect
 	//
 	enum SoundEffectId {
-		Wall_Hit, Paddle_Hit, GunShot, ExplosionSound
+		Wall_Hit, Paddle_Hit
 	};
 
 private:
@@ -120,4 +120,3 @@ private:
 	SoundEffect** soundEffects_;
 };
 
-#endif /* RESOURCES_H_ */

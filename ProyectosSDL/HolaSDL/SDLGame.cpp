@@ -1,9 +1,9 @@
 #include "SDLGame.h"
 #include <time.h>
 
-
 SDLGame::SDLGame(std::string windowTitle, int width, int height) :
-		windowTitle_(windowTitle), width_(width), height_(height) {
+		windowTitle_(windowTitle), width_(width), height_(height), client_id(
+				-1), conn_(), properties_() {
 	initSDL();
 	initResources();
 }
@@ -87,3 +87,22 @@ int SDLGame::getWindowHeight() const {
 	return height_;
 }
 
+Uint8 SDLGame::getClientId() const {
+	return client_id;
+}
+
+ClientConnection& SDLGame::getConnection() {
+	return conn_;
+}
+
+bool SDLGame::isMasterClient() const {
+	return client_id == 0;
+}
+
+void SDLGame::setProp(string key, string value) {
+	properties_[key] = value;
+}
+
+string SDLGame::getProp(string key) {
+	return properties_[key];
+}
