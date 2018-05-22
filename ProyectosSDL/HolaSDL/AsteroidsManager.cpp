@@ -5,7 +5,7 @@
 AsteroidsManager::AsteroidsManager(SDLGame* game) :
 	GameObject(game), 
 	asteroidRenderer_(game->getResources()->getImageTexture(Resources::Astroid)),
-	rotationPhysics_(5)
+	rotationPhysics_(5), skeletonRendered_()
 {
 }
 
@@ -36,18 +36,24 @@ void AsteroidsManager::render(Uint32 time) {
 void AsteroidsManager::receive(Message* msg) {
 	switch (msg->mType_) {
 	case GAME_START:
-		cout << "juego iniciado ";
-		startGame();
-		// add you code
+		cout << "juego iniciado " << endl;
+		startGame(); // añade 4 asteroides
 		break;
-		//add other cases
+	case ASTEROID_STATE:
+		if (!game_->isMasterClient()) {
+			AsteroidStateMsg* m = static_cast<AsteroidStateMsg*>(msg);
+			addAsteroid(m->Id_, m->pos_, m->dir_, m->vel_, m->width_, m->height_);
+		}
 	}
 }
 
 void AsteroidsManager::startGame()
 {
-	if(game_->isMasterClient())
-		addAsteroid();
+	if (game_->isMasterClient()) {
+		for (int i = 0; i < 4; i++)
+			addAsteroid();
+		cout << numAsteroids << endl;
+	}
 }
 
 Asteroid * AsteroidsManager::getAsteroidDead()
@@ -72,12 +78,11 @@ Asteroid * AsteroidsManager::getAsteroidDead()
 		a->addPhysicsComponent(&deactiveteOnBorder_);
 		a->addPhysicsComponent(&rotationPhysics_);
 		a->addRenderComponent(&asteroidRenderer_);
+		a->addRenderComponent(&skeletonRendered_);
 		a->setWidth(10);
 		a->setHeight(10);
 		// the id of the asteroid is its position in the vector
 		a->setAsteroidId(numAsteroids);
-
-		numAsteroids++;
 		asteroids_.push_back(a);
 	}
 	cout << " " << a << endl;
@@ -111,6 +116,24 @@ void AsteroidsManager::addAsteroid()
 	a->setPosition(pos);
 	a->setVelocity(vel);
 	a->setDirection(dir);
+	a->setHeight(height);
+	a->setWidth(width);
 	a->setActive(true);
+
+	numAsteroids++;
+	
+
+	AsteroidStateMsg msg = { a->getAsteroidId(), a->getPosition(), a->getDirection(), 
+		a->getVelocity(), a->getWidth(), a->getHeight()};
+	send(&msg);
+	 cout << (int)a->getAsteroidId() << endl;
+}
+
+void AsteroidsManager::addAsteroid(Uint8 Id, Vector2D pos, Vector2D dir, 
+	Vector2D vel, double width, double height)
+{
+	numAsteroids++;
+	cout << " ID: " << (int)Id << endl;
+	cout << "tamvect " << asteroids_.size() << " numAst " << numAsteroids << endl;
 }
 

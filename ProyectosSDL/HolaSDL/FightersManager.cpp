@@ -8,10 +8,8 @@ FightersManager::FightersManager(SDLGame* game, NetworkMessenger* nm,
 		fighters_(), //
 		freeMove_(SDLK_LEFT, SDLK_RIGHT, SDLK_UP, SDLK_DOWN, 2, 5), //
 		circularMotionPhysics_(), //
-		fighterImage_(
-				game->getResources()->getImageTexture(Resources::Airplanes), {
-						47, 90, 207, 250 }), skeletonRendered_(), gun_(
-				SDLK_SPACE, 3000, 6) {
+		fighterImage_( game->getResources()->getImageTexture(Resources::Airplanes), {47, 90, 207, 250 }), 
+		skeletonRendered_(), gun_(SDLK_SPACE, 3000, 6) {
 
 	freeMove_.registerObserver(nm);
 	gun_.registerObserver(bm);
@@ -51,6 +49,7 @@ void FightersManager::receive(Message* msg) {
 		startGame();
 		break;
 	case GAME_OVER:
+		cout << "GAME OVER" << endl;
 		endGame();
 		break;
 	case FIGHTER_STATE:

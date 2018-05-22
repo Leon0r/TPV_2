@@ -32,9 +32,11 @@ private:
 	virtual void disableAsteroids();
 	virtual void disableAsteroid(Uint8 id);
 	virtual void addAsteroid();
+	virtual void addAsteroid(Uint8 Id, Vector2D pos, Vector2D dir, Vector2D vel, double width, double height);
 	vector<Asteroid*> asteroids_;
 
 	ImageRenderer asteroidRenderer_;
+	SkeletonRendered skeletonRendered_;
 	RotationPhysics rotationPhysics_;
 	DeActivateOnBorderExit deactiveteOnBorder_;
 	BasicMotionPhysics basicMotion_;
