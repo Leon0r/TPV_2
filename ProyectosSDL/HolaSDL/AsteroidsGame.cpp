@@ -101,6 +101,7 @@ void AsteroidsGame::handleInput(Uint32 time) {
 		if (event.type == SDL_KEYDOWN) {
 			switch (event.key.keysym.sym) {
 			case SDLK_ESCAPE:
+				cout << "scape pulsado" << endl;
 				exit_ = true;
 				break;
 				// Pressing f to toggle fullscreen.
@@ -108,7 +109,8 @@ void AsteroidsGame::handleInput(Uint32 time) {
 				int flags = SDL_GetWindowFlags(window_);
 				if (flags & SDL_WINDOW_FULLSCREEN) {
 					SDL_SetWindowFullscreen(window_, 0);
-				} else {
+				}
+				else {
 					SDL_SetWindowFullscreen(window_, SDL_WINDOW_FULLSCREEN);
 				}
 				break;

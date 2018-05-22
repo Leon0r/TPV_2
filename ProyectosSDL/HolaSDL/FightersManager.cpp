@@ -49,14 +49,13 @@ void FightersManager::receive(Message* msg) {
 		startGame();
 		break;
 	case GAME_OVER:
-		cout << "GAME OVER" << endl;
 		endGame();
 		break;
 	case FIGHTER_STATE:
 		updateFighterState(static_cast<FighterStateMsg*>(msg));
 		break;
 	case BULLET_FIGHTER_COLLISION:
-		killPlayer(static_cast<BulletFighterCollisionMsg*>(msg)->fighterId_);
+		//killPlayer(static_cast<BulletFighterCollisionMsg*>(msg)->fighterId_);
 		break;
 	}
 }

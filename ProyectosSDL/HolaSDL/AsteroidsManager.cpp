@@ -36,7 +36,6 @@ void AsteroidsManager::render(Uint32 time) {
 void AsteroidsManager::receive(Message* msg) {
 	switch (msg->mType_) {
 	case GAME_START:
-		cout << "juego iniciado " << endl;
 		startGame(); // añade 4 asteroides
 		break;
 	case ASTEROID_STATE:
@@ -52,15 +51,14 @@ void AsteroidsManager::startGame()
 	if (game_->isMasterClient()) {
 		for (int i = 0; i < 4; i++)
 			addAsteroid();
-		cout << numAsteroids << endl;
 	}
 }
 
 Asteroid * AsteroidsManager::getAsteroidDead()
 {
-	if (asteroids_.size() <= numAsteroids) {
+	/*if (asteroids_.size() <= numAsteroids) {
 		asteroids_.resize(numAsteroids + 1);
-	}
+	}*/
 
 	// look for an inactive asteroid
 	vector<Asteroid*>::iterator it = asteroids_.begin();
@@ -85,7 +83,6 @@ Asteroid * AsteroidsManager::getAsteroidDead()
 		a->setAsteroidId(numAsteroids);
 		asteroids_.push_back(a);
 	}
-	cout << " " << a << endl;
 	return a;
 }
 
@@ -112,7 +109,7 @@ void AsteroidsManager::addAsteroid()
 	int height = (rand() % 10) + 20;
 
 	Asteroid* a = getAsteroidDead();
-	cout << " " << a << endl;
+
 	a->setPosition(pos);
 	a->setVelocity(vel);
 	a->setDirection(dir);
@@ -126,14 +123,19 @@ void AsteroidsManager::addAsteroid()
 	AsteroidStateMsg msg = { a->getAsteroidId(), a->getPosition(), a->getDirection(), 
 		a->getVelocity(), a->getWidth(), a->getHeight()};
 	send(&msg);
-	 cout << (int)a->getAsteroidId() << endl;
 }
 
 void AsteroidsManager::addAsteroid(Uint8 Id, Vector2D pos, Vector2D dir, 
 	Vector2D vel, double width, double height)
 {
+	Asteroid* a = getAsteroidDead();
+	a->setAsteroidId(Id);
+	a->setPosition(pos);
+	a->setDirection(dir);
+	a->setVelocity(vel);
+	a->setWidth(width);
+	a->setHeight(height);
+	a->setActive(true);
 	numAsteroids++;
-	cout << " ID: " << (int)Id << endl;
-	cout << "tamvect " << asteroids_.size() << " numAst " << numAsteroids << endl;
 }
 

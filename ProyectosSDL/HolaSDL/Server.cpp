@@ -83,7 +83,6 @@ void Server::start(int port) {
 				if (clients_[i] != nullptr && clients_[i]->ready()) {
 					// receive a message from the i-th client
 					msg = clients_[i]->recvMessage();
-
 					if (msg == nullptr) {
 						// either the client closed the connection, or something went wrong,
 						// we disconnect the client
