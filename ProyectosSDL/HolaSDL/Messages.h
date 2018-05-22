@@ -12,6 +12,7 @@ enum MessageId {
 	GAME_OVER,
 	FIGHTER_STATE,
 	ASTEROID_STATE,
+	DISABLE_ASTEROID,
 	FIGHTER_SHOOT,
 	BULLET_FIGHTER_COLLISION
 };
@@ -85,6 +86,10 @@ struct AsteroidStateMsg : Message {
 	double height_;
 };
 
+struct disableAsteroidMsg :Message {
+	disableAsteroidMsg(Uint8 Id) : Message(DISABLE_ASTEROID, sizeof(disableAsteroidMsg)), Id_(Id){}
+		Uint8 Id_;
+};
 
 struct FighterIsShootingMsg: Message {
 	FighterIsShootingMsg(Uint8 fighterId, Vector2D bulletPosition,

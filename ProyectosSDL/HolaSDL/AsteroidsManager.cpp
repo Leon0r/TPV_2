@@ -33,10 +33,10 @@ void AsteroidsManager::update(Uint32 time) {
 }
 
 void AsteroidsManager::render(Uint32 time) {
-	for (Asteroid* a : asteroids_)
-		if (a->isActive()) {
-			a->render(time);
-		}
+		for (Asteroid* a : asteroids_)
+			if (a->isActive()) {
+				a->render(time);
+			}
 }
 
 void AsteroidsManager::receive(Message* msg) {
@@ -49,6 +49,17 @@ void AsteroidsManager::receive(Message* msg) {
 			AsteroidStateMsg* m = static_cast<AsteroidStateMsg*>(msg);
 			addAsteroid(m->Id_, m->pos_, m->dir_, m->vel_, m->width_, m->height_);
 		}
+		break;
+	case DISABLE_ASTEROID:
+		if (!game_->isMasterClient()) {
+			disableAsteroidMsg* m = static_cast<disableAsteroidMsg*>(msg);
+			disableAsteroid(m->Id_);
+		}
+		break;
+	case GAME_OVER:
+		running = false;
+		disableAsteroids();
+		break;
 	}
 }
 
@@ -63,10 +74,6 @@ void AsteroidsManager::startGame()
 
 Asteroid * AsteroidsManager::getAsteroidDead()
 {
-	/*if (asteroids_.size() <= numAsteroids) {
-		asteroids_.resize(numAsteroids + 1);
-	}*/
-
 	// look for an inactive asteroid
 	vector<Asteroid*>::iterator it = asteroids_.begin();
 	while (it != asteroids_.end() && *it != nullptr
@@ -95,13 +102,24 @@ Asteroid * AsteroidsManager::getAsteroidDead()
 
 void AsteroidsManager::disableAsteroids()
 {
-	for (Asteroid* a : asteroids_) {
-		a->setActive(false);
-	}
+	if (game_->isMasterClient())
+		for (Asteroid* a : asteroids_) {
+			a->setActive(false);
+			disableAsteroidMsg msg = { a->getAsteroidId() };
+			send(&msg);
+		}
 }
 
 void AsteroidsManager::disableAsteroid(Uint8 id)
 {
+	/*Asteroid* a = nullptr;
+	vector<Asteroid*>::iterator it = asteroids_.begin();
+	while (it != asteroids_.end() && (*it)->getAsteroidId() != id && !(*it)->isActive())
+	{
+		it++;
+	}
+	if (it != asteroids_.end())
+		(*it)->setActive(false);*/
 	asteroids_[id]->setActive(false);
 }
 
