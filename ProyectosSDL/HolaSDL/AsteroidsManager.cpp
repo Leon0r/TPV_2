@@ -2,8 +2,11 @@
 
 #include "Collisions.h"
 
-AsteroidsManager::AsteroidsManager(SDLGame* game) : GameObject(game), rotationPhysics_(5),
-	astroImage_(game->getResources()->getImageTexture(Resources::Astroid)), numAsteroids(0) {
+AsteroidsManager::AsteroidsManager(SDLGame* game) :
+	GameObject(game), 
+	asteroidRenderer_(game->getResources()->getImageTexture(Resources::Astroid)),
+	rotationPhysics_(5)
+{
 }
 
 AsteroidsManager::~AsteroidsManager() {
@@ -32,37 +35,65 @@ void AsteroidsManager::render(Uint32 time) {
 
 void AsteroidsManager::receive(Message* msg) {
 	switch (msg->mType_) {
-	case ASTEROID_INFO:
-		initAsteroid(static_cast<PlayerInfoMsg*>(msg)->clientId_);
-		break;
 	case GAME_START:
+		cout << "juego iniciado ";
 		startGame();
+		// add you code
 		break;
-	case ASTEROID_STATE:
-		updateAsteroidState(static_cast<AsteroidStateMsg*>(msg));
-		break;
+		//add other cases
 	}
+}
+
+void AsteroidsManager::startGame()
+{
+	if(game_->isMasterClient())
+		addAsteroid();
 }
 
 Asteroid * AsteroidsManager::getAsteroidDead()
 {
-	// recorre la lista de asteroides buscando uno inactivo
-	// si lo encuentra, lo devuelve para reutilizarlo
-	// si no, crea uno con los componentes del asteroids
-	vector<Asteroid*>::iterator it;
-	it = asteroids_.begin();
-	while (it != asteroids_.end() && (*it)->isActive()) it++;
-
-	if (it == asteroids_.end()) {
-		asteroids_.push_back(new Asteroid(game_));
-		asteroids_.back()->addPhysicsComponent(&circularPhysics_);
-		asteroids_.back()->addRenderComponent(&astroImage_);
-		asteroids_.back()->addPhysicsComponent(&rotationPhysics_);
-		asteroids_.back()->setActive(false);
-		return asteroids_.back();
+	if (asteroids_.size() <= numAsteroids) {
+		asteroids_.resize(numAsteroids + 1);
 	}
-	else
-		return (*it);
+
+	// look for an inactive asteroid
+	vector<Asteroid*>::iterator it = asteroids_.begin();
+	while (it != asteroids_.end() && *it != nullptr
+		&& (*it)->isActive())
+		it++;
+
+	Asteroid* a = nullptr;
+	if (it != asteroids_.end() && *it != nullptr) {
+		a = *it;
+	}
+	else { // if no inactive asteroid, create one;
+		a = new Asteroid(getGame());
+		a->addPhysicsComponent(&basicMotion_);
+		a->addPhysicsComponent(&deactiveteOnBorder_);
+		a->addPhysicsComponent(&rotationPhysics_);
+		a->addRenderComponent(&asteroidRenderer_);
+		a->setWidth(10);
+		a->setHeight(10);
+		// the id of the asteroid is its position in the vector
+		a->setAsteroidId(numAsteroids);
+
+		numAsteroids++;
+		asteroids_.push_back(a);
+	}
+	cout << " " << a << endl;
+	return a;
+}
+
+void AsteroidsManager::disableAsteroids()
+{
+	for (Asteroid* a : asteroids_) {
+		a->setActive(false);
+	}
+}
+
+void AsteroidsManager::disableAsteroid(Uint8 id)
+{
+	asteroids_[id]->setActive(false);
 }
 
 void AsteroidsManager::addAsteroid()
@@ -75,53 +106,11 @@ void AsteroidsManager::addAsteroid()
 	int width = (rand() % 10) + 20;
 	int height = (rand() % 10) + 20;
 
-	Asteroid* aux = getAsteroidDead();
-	aux->setDirection(dir);
-	aux->setPosition(pos);
-	aux->setVelocity(vel);
-	aux->setHeight(height);
-	aux->setWidth(width);
-	aux->setActive(true);
-	numAsteroids++;
-}
-
-void AsteroidsManager::sendAsteroidsState()
-{
-	Asteroid* a = asteroids_[numAsteroids - 1];
-	AsteroidStateMsg msg = { //
-		(Uint8)numAsteroids,
-		a->getPosition(), //
-		a->getDirection(), //
-		a->getVelocity(), //
-		a->getWidth(), //
-		a->getHeight() //
-	};
-	send(&msg);
-}
-
-////////////////TEMP
-
-void AsteroidsManager::startGame()
-{
-	addAsteroid();
-	sendAsteroidsState();
-}
-
-void AsteroidsManager::initAsteroid(Uint8 id)
-{
-}
-
-void AsteroidsManager::updateAsteroidState(AsteroidStateMsg * msg)
-{
-	Asteroid* a = asteroids_[msg->Id_];
-
-	if (a == nullptr) {
-		a = getAsteroidDead();
-	}
-	a->setWidth(msg->width_);
-	a->setHeight(msg->height_);
-	a->setPosition(msg->pos_);
-	a->setDirection(msg->dir_);
-	a->setVelocity(msg->vel_);
+	Asteroid* a = getAsteroidDead();
+	cout << " " << a << endl;
+	a->setPosition(pos);
+	a->setVelocity(vel);
+	a->setDirection(dir);
+	a->setActive(true);
 }
 

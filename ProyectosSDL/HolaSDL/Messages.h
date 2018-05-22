@@ -7,15 +7,13 @@ enum MessageId {
 	CONNECTED,
 	JOINING_GAME,
 	PLAYER_INFO,
-	ASTEROID_INFO,
 	GAME_IS_READY,
 	GAME_START,
 	GAME_OVER,
 	FIGHTER_STATE,
 	ASTEROID_STATE,
 	FIGHTER_SHOOT,
-	BULLET_FIGHTER_COLLISION, 
-	ADD_ASTEROID
+	BULLET_FIGHTER_COLLISION
 };
 
 typedef Uint16 header_t_;
@@ -75,7 +73,7 @@ struct FighterStateMsg: Message {
 struct AsteroidStateMsg : Message {
 	AsteroidStateMsg(Uint8 Id, Vector2D pos, Vector2D dir, Vector2D vel,
 		double width, double height) :
-		Message(ASTEROID_STATE, sizeof(FighterStateMsg)), Id_(
+		Message(ASTEROID_STATE, sizeof(AsteroidStateMsg)), Id_(
 			Id), pos_(pos), dir_(dir), vel_(vel), width_(width), height_(
 				height) {
 	}

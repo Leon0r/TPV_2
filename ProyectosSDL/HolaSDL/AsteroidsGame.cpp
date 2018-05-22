@@ -61,6 +61,8 @@ void AsteroidsGame::initGame() {
 	collisionManager_.registerObserver(&gameManager_);
 	collisionManager_.registerObserver(&asteroidsManager_);
 
+	asteroidsManager_.registerObserver(&networkMessenger_);
+
 	networkMessenger_.init(&getConnection());
 	gameManager_.init();
 
