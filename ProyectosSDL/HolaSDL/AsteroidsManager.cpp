@@ -1,5 +1,4 @@
 #include "AsteroidsManager.h"
-
 #include "Collisions.h"
 
 AsteroidsManager::AsteroidsManager(SDLGame* game) :
@@ -7,6 +6,7 @@ AsteroidsManager::AsteroidsManager(SDLGame* game) :
 	asteroidRenderer_(game->getResources()->getImageTexture(Resources::Astroid)),
 	rotationPhysics_(5), skeletonRendered_()
 {
+
 }
 
 AsteroidsManager::~AsteroidsManager() {
@@ -24,6 +24,12 @@ void AsteroidsManager::update(Uint32 time) {
 		if (a->isActive()) {
 			a->update(time);
 		}
+	// timer de creacion de asteroides
+	Uint32 timeNow = SDL_GetTicks();
+	if (timeLast + timerNewAst <= timeNow && game_->isMasterClient() && running) {
+		addAsteroid();
+		timeLast = SDL_GetTicks();
+	}
 }
 
 void AsteroidsManager::render(Uint32 time) {
@@ -51,6 +57,7 @@ void AsteroidsManager::startGame()
 	if (game_->isMasterClient()) {
 		for (int i = 0; i < 4; i++)
 			addAsteroid();
+		running = true;
 	}
 }
 

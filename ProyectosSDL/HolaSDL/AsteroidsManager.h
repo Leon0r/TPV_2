@@ -13,6 +13,8 @@
 /*
  *
  */
+
+
 class AsteroidsManager: public GameObject, public Observer, public Observable {
 
 public:
@@ -42,6 +44,9 @@ private:
 	BasicMotionPhysics basicMotion_;
 
 	int numAsteroids = 0;
+	Uint32 timeLast = 0;
+	Uint32  timerNewAst = 5000;
+	bool running = false;
 
 };
 
