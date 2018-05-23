@@ -89,6 +89,7 @@ void Server::start(int port) {
 						SDLNet_TCP_DelSocket(socketSet,
 								clients_[i]->getSocket()); // remove it from set -- very important!!
 						clients_[i]->close();
+
 						delete clients_[i];
 						clients_[i] = nullptr;
 						cout << "Client " << i << " disconnected" << endl;

@@ -37,12 +37,8 @@ void AsteroidsGame::initGame() {
 	client_id = static_cast<ConnectedMsg*>(msg)->clientId_;
 	cout << "Connected with ID : " << (int) client_id << endl;
 
-	/** TODO
-	 *
-	 *  Add the asteroidsManager_ to the game
-	 *
-	 **/
 
+	// Adding observers
 	gameManager_.registerObserver(&networkMessenger_);
 	gameManager_.registerObserver(&fightersManager_);
 	gameManager_.registerObserver(&bulletsManager_);
@@ -63,9 +59,11 @@ void AsteroidsGame::initGame() {
 
 	asteroidsManager_.registerObserver(&networkMessenger_);
 
+	// network init
 	networkMessenger_.init(&getConnection());
 	gameManager_.init();
 
+	// añadir actores
 	actors_.push_back(&gameManager_);
 	actors_.push_back(&fightersManager_);
 	actors_.push_back(&bulletsManager_);
