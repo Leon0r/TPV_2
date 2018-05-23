@@ -14,7 +14,8 @@ enum MessageId {
 	ASTEROID_STATE,
 	DISABLE_ASTEROID,
 	FIGHTER_SHOOT,
-	BULLET_FIGHTER_COLLISION
+	BULLET_FIGHTER_COLLISION,
+	ASTEROID_FIGHTER_COLLISION
 };
 
 typedef Uint16 header_t_;
@@ -115,6 +116,11 @@ struct BulletFighterCollisionMsg: Message {
 	Uint8 bulletOwnerId_;
 };
 
+struct AsteroidFighterCollisionMsg :Message {
+	AsteroidFighterCollisionMsg(Uint8 fighterId) : Message(ASTEROID_FIGHTER_COLLISION, sizeof(AsteroidFighterCollisionMsg)), 
+		fighterId_(fighterId) {}
+	Uint8 fighterId_;
+};
 
 // this value should be bigger than the size of all messages
 #define MAX_MSG_SIZE 1000

@@ -29,15 +29,33 @@ void CollisionManager::update(Uint32 time) {
 			if (b->isActive()) {
 				for (Fighter* f : fighters) {
 					if (f != nullptr && f->isActive()
-							&& Collisions::collidesWithRotation(b, f)) {
+						&& Collisions::collidesWithRotation(b, f)) {
 						BulletFighterCollisionMsg m = { f->getId(),
 								b->getBulletId(), b->getFighterId() };
 						send(&m);
 						break; // it can kill only one fighter
 					}
 				}
+				for (Asteroid* a : asteroids) {
+					if (a != nullptr && a->isActive()
+						&& Collisions::collidesWithRotation(b, a)) {
+						b->setActive(false);
+					}
+				}
 			}
 		}
+	}
+	// Fighter-Asteroid
+	for (Fighter* f : fighters) {
+		if (f != nullptr && f->isActive())
+			for (Asteroid* a : asteroids) {
+				if (a != nullptr && a->isActive()
+					&& Collisions::collidesWithRotation(a, f)) {
+					AsteroidFighterCollisionMsg m = { f->getId()};
+					send(&m);
+					break; // it can kill only one fighter
+				}
+			}
 	}
 }
 
