@@ -71,6 +71,7 @@ int GameManager::getNumOfConnectedPlayers() {
 }
 
 void GameManager::registerPlayer(Uint8 id) {
+
 	if (id >= players_.size()) {
 		players_.resize(id + 1);
 	}
@@ -85,35 +86,30 @@ void GameManager::registerPlayer(Uint8 id) {
 				Message msg = { GAME_IS_READY };
 				send(&msg);
 				getReady();
+
 			}
 		}
-
 	}
 }
 
 void GameManager::disablePlayer(Uint8 id)
 {
-	
+
+	players_[id].id_ = id;
+	players_[id].connected_ = false;
+	players_[id].alive_ = false;
 	numOfConnectedPlayers_--;
 	waitGame();
 
-	if (getGame()->isMasterClient()) {
-		if (numOfConnectedPlayers_ < NUM_OF_PLAYERS) {
-			Message msg = { GAME_WAIT };
-			send(&msg);
-		}
+	if (numOfConnectedPlayers_ < NUM_OF_PLAYERS) {
+		Message msg = { GAME_WAIT };
+		send(&msg);
 	}
-	else if(id == 0)
-	{
-		if (numOfConnectedPlayers_ < NUM_OF_PLAYERS) {
-			Message msg = { GAME_WAIT };
-			send(&msg);
-		}
-	}
-	
+
 }
 
 void GameManager::sendClientInfo() {
+
 	PlayerInfoMsg msg = { getGame()->getClientId() };
 	send(&msg);
 }
