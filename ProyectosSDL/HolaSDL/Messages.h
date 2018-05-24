@@ -9,13 +9,15 @@ enum MessageId {
 	PLAYER_INFO,
 	GAME_IS_READY,
 	GAME_START,
+	GAME_WAIT,
 	GAME_OVER,
 	FIGHTER_STATE,
 	ASTEROID_STATE,
 	DISABLE_ASTEROID,
 	FIGHTER_SHOOT,
 	BULLET_FIGHTER_COLLISION,
-	ASTEROID_FIGHTER_COLLISION
+	ASTEROID_FIGHTER_COLLISION,
+	DISABLED_PLAYER
 };
 
 typedef Uint16 header_t_;
@@ -34,6 +36,13 @@ struct Message {
 struct ConnectedMsg: Message {
 	ConnectedMsg(Uint8 clientId) :
 			Message(CONNECTED, sizeof(ConnectedMsg)), clientId_(clientId) {
+	}
+	Uint8 clientId_;
+};
+
+struct DisabledPlayer : Message {
+	DisabledPlayer(Uint8 clientId) :
+		Message(DISABLED_PLAYER, sizeof(DisabledPlayer)), clientId_(clientId) {
 	}
 	Uint8 clientId_;
 };

@@ -39,9 +39,11 @@ public:
 
 private:
 	void registerPlayer(Uint8 id);
+	void disablePlayer(Uint8 id);
 	void sendClientInfo();
 	void getReady();
 	void startGame();
+	void waitGame();
 	void endGame();
 	void killPlayer(Uint8 id);
 	void checkIfGameIsOver();

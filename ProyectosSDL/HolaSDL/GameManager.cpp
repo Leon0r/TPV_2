@@ -42,11 +42,17 @@ void GameManager::receive(Message* msg) {
 	case PLAYER_INFO:
 		registerPlayer(static_cast<PlayerInfoMsg*>(msg)->clientId_);
 		break;
+	case DISABLED_PLAYER:
+		disablePlayer(static_cast<DisabledPlayer*>(msg)->clientId_);
+		break;
 	case GAME_IS_READY:
 		getReady();
 		break;
 	case GAME_START:
 		startGame();
+		break;
+	case GAME_WAIT:
+		waitGame();
 		break;
 	case GAME_OVER:
 		endGame();
@@ -85,6 +91,28 @@ void GameManager::registerPlayer(Uint8 id) {
 	}
 }
 
+void GameManager::disablePlayer(Uint8 id)
+{
+	
+	numOfConnectedPlayers_--;
+	waitGame();
+
+	if (getGame()->isMasterClient()) {
+		if (numOfConnectedPlayers_ < NUM_OF_PLAYERS) {
+			Message msg = { GAME_WAIT };
+			send(&msg);
+		}
+	}
+	else if(id == 0)
+	{
+		if (numOfConnectedPlayers_ < NUM_OF_PLAYERS) {
+			Message msg = { GAME_WAIT };
+			send(&msg);
+		}
+	}
+	
+}
+
 void GameManager::sendClientInfo() {
 	PlayerInfoMsg msg = { getGame()->getClientId() };
 	send(&msg);
@@ -106,9 +134,17 @@ void GameManager::startGame() {
 	if (state_ != WAITING) {
 		alivePlayers_ = numOfConnectedPlayers_;
 		for (PlayerInfo& p : players_) { // the use of & is important
-			p.alive_ = true;
+			if (&p != nullptr)
+				p.alive_ = true;
 		}
 		state_ = RUNNING;
+	}
+}
+
+void GameManager::waitGame()
+{
+	if (state_ != WAITING) {
+		state_ = WAITING;
 	}
 }
 

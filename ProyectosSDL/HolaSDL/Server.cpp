@@ -85,6 +85,14 @@ void Server::start(int port) {
 					msg = clients_[i]->recvMessage();
 					if (msg == nullptr) {
 						// either the client closed the connection, or something went wrong,
+
+						// send msg to inform of disconnection
+						msg = &DisabledPlayer(i);
+						for (int j = 0; j < clients_.size(); j++) {
+							if (clients_[j] != nullptr) {
+								clients_[j]->sendMessage(msg); // normally we should check for error
+							}
+						}
 						// we disconnect the client
 						SDLNet_TCP_DelSocket(socketSet,
 								clients_[i]->getSocket()); // remove it from set -- very important!!
@@ -93,6 +101,9 @@ void Server::start(int port) {
 						delete clients_[i];
 						clients_[i] = nullptr;
 						cout << "Client " << i << " disconnected" << endl;
+
+						
+
 					} else {
 						// if no error, forward the message to all clients
 						for (int j = 0; j < clients_.size(); j++) {

@@ -48,6 +48,7 @@ void FightersManager::receive(Message* msg) {
 	case GAME_START:
 		startGame();
 		break;
+	case GAME_WAIT:
 	case GAME_OVER:
 		endGame();
 		break;

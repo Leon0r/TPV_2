@@ -56,6 +56,7 @@ void AsteroidsManager::receive(Message* msg) {
 			disableAsteroid(m->Id_);
 		}
 		break;
+	case GAME_WAIT:
 	case GAME_OVER:
 		running = false;
 		disableAsteroids();
@@ -112,14 +113,6 @@ void AsteroidsManager::disableAsteroids()
 
 void AsteroidsManager::disableAsteroid(Uint8 id)
 {
-	/*Asteroid* a = nullptr;
-	vector<Asteroid*>::iterator it = asteroids_.begin();
-	while (it != asteroids_.end() && (*it)->getAsteroidId() != id && !(*it)->isActive())
-	{
-		it++;
-	}
-	if (it != asteroids_.end())
-		(*it)->setActive(false);*/
 	asteroids_[id]->setActive(false);
 }
 
